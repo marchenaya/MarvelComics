@@ -1,0 +1,7 @@
+package com.marchenaya.data.entity.remote
+
+import com.google.gson.annotations.SerializedName
+
+data class CreatorDataContainerRemoteEntity(
+    @SerializedName("results") val results: List<CreatorRemoteEntity>
+)

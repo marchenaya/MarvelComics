@@ -19,4 +19,7 @@ ext {
     junitVersionTest = '4.13.2'
     daggerVersion = '2.41'
     navigationKtxVersion = '2.4.1'
+    retrofitVersion = '2.9.0'
+    okhttpLoggingInterceptorVersion = '4.9.0'
+    timberVersion = "5.0.1"
 }
