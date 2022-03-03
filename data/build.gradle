@@ -20,6 +20,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "BASE_URL", "\"https://gateway.marvel.com\""
+            buildConfigField "String", "MARVEL_PUBLIC_KEY", "\"2645a7ef7d85d4b80b23503576a36b00\""
+            buildConfigField "String", "MARVEL_PRIVATE_KEY", "\"d7a9e83daaae269ba28ef65b65a6d19110821f53\""
+        }
+        debug {
+            buildConfigField "String", "BASE_URL", "\"https://gateway.marvel.com\""
+            buildConfigField "String", "MARVEL_PUBLIC_KEY", "\"2645a7ef7d85d4b80b23503576a36b00\""
+            buildConfigField "String", "MARVEL_PRIVATE_KEY", "\"d7a9e83daaae269ba28ef65b65a6d19110821f53\""
         }
     }
     compileOptions {
