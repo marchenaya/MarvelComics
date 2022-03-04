@@ -29,9 +29,14 @@ class ComicRemoteEntityDataMapper @Inject constructor(
         return ComicEntity(
             id = input.id,
             title = input.title,
-            description = input.description,
+            description = input.description ?: "",
             pageCount = input.pageCount,
-            image = "${input.image.path}/$IMAGE_VARIANT.${input.image.extension}",
+            image = "${
+                input.image.path.replace(
+                    "http",
+                    "https"
+                )
+            }/$IMAGE_VARIANT.${input.image.extension}",
             urls = input.urls.map { it.url },
             characters = emptyList(),
             creators = emptyList()

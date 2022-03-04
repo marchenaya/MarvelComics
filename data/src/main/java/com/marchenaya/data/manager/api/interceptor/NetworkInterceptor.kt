@@ -6,7 +6,6 @@ import com.marchenaya.data.exception.RequestFailException
 import dagger.Reusable
 import java.net.ConnectException
 import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import okhttp3.Interceptor
@@ -26,8 +25,7 @@ class NetworkInterceptor @Inject constructor() : Interceptor {
             when (exception) {
                 is SocketTimeoutException,
                 is TimeoutException,
-                is ConnectException,
-                is UnknownHostException -> throw OfflineException()
+                is ConnectException -> throw OfflineException()
                 else -> throw exception
             }
         }

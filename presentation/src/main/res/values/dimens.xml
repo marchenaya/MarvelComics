@@ -2,4 +2,8 @@
 <resources>
     <dimen name="comic_recycler_view_vertical_padding">12dp</dimen>
     <dimen name="comic_empty_list_text_size">24sp</dimen>
+    <dimen name="error_text_size">24sp</dimen>
+    <dimen name="base_margin">8dp</dimen>
+    <dimen name="base_padding">8dp</dimen>
+    <dimen name="fourfold_padding">32dp</dimen>
 </resources>

@@ -22,4 +22,6 @@ ext {
     retrofitVersion = '2.9.0'
     okhttpLoggingInterceptorVersion = '4.9.0'
     timberVersion = "5.0.1"
+    pagingVersion = "3.1.0"
+    glideVersion = "4.12.0"
 }
