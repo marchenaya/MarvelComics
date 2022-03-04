@@ -13,6 +13,7 @@ import timber.log.Timber
 private const val MARVEL_STARTING_PAGE_INDEX = 0
 
 class MarvelPagingSource(
+    private val query: String,
     private val comicBusinessHelper: ComicBusinessHelper,
     private val comicEntityDataMapper: ComicEntityDataMapper
 ) : PagingSource<Int, Comic>() {
@@ -20,7 +21,11 @@ class MarvelPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comic> {
         val position = params.key ?: MARVEL_STARTING_PAGE_INDEX
         return try {
-            val response = comicBusinessHelper.getComicList(position, params.loadSize)
+            val response = if (query.isEmpty()) {
+                comicBusinessHelper.getComicList(position, params.loadSize)
+            } else {
+                comicBusinessHelper.getComicListByTitle(query, position, params.loadSize)
+            }
             val nextKey = if (response.isEmpty()) {
                 null
             } else {

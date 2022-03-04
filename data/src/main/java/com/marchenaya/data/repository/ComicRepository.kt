@@ -18,7 +18,7 @@ class ComicRepository @Inject constructor(
     private val comicEntityDataMapper: ComicEntityDataMapper
 ) {
 
-    fun getComicList(): Flow<PagingData<Comic>> {
+    fun getComicList(query: String): Flow<PagingData<Comic>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
@@ -27,28 +27,12 @@ class ComicRepository @Inject constructor(
             ),
             pagingSourceFactory = {
                 MarvelPagingSource(
+                    query,
                     comicBusinessHelper,
                     comicEntityDataMapper
                 )
             }).flow
     }
 
-    suspend fun getComicList(page: Int, itemsPerPage: Int): List<Comic> =
-        comicEntityDataMapper.transformEntityList(
-            comicBusinessHelper.getComicList(
-                page, itemsPerPage
-            )
-        )
-
-    suspend fun getComicListByTitle(
-        query: String,
-        page: Int,
-        itemsPerPage: Int
-    ): List<Comic> =
-        comicEntityDataMapper.transformEntityList(
-            comicBusinessHelper.getComicListByTitle(
-                query, page, itemsPerPage
-            )
-        )
 
 }

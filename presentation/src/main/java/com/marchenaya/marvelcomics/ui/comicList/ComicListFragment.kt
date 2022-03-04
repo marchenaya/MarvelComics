@@ -2,13 +2,16 @@ package com.marchenaya.marvelcomics.ui.comicList
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.hide
@@ -33,13 +36,37 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private var searchJob: Job? = null
 
-    private fun getComics() {
+    private fun getComics(query: String = "") {
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
-            viewModel.getComics().collect {
+            viewModel.getComics(query).collect {
                 adapter.submitData(it)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        val menuItem = menu.findItem(R.id.activity_main_menu_search)
+        val searchView = menuItem.actionView as SearchView
+
+        searchView.queryHint = getString(R.string.search_menu_button)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(query: String?) = false
+            override fun onQueryTextSubmit(newText: String?): Boolean {
+                newText?.let {
+                    getComics(it)
+                }
+                return false
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
