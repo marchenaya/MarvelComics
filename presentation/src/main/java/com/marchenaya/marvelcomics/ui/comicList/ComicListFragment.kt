@@ -18,6 +18,7 @@ import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.ui.comicList.item.ComicListFragmentAdapter
 import com.marchenaya.marvelcomics.ui.comicList.load.ComicLoadStateAdapter
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -26,6 +27,11 @@ import kotlinx.coroutines.launch
 
 
 class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentComicListBinding>() {
+
+    @Inject
+    lateinit var navigatorListener: ComicListFragmentNavigatorListener
+
+    private var query = ""
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicListBinding =
         FragmentComicListBinding::inflate
@@ -62,6 +68,7 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
             override fun onQueryTextChange(query: String?) = false
             override fun onQueryTextSubmit(newText: String?): Boolean {
                 newText?.let {
+                    query = it
                     getComics(it)
                 }
                 return false
@@ -80,17 +87,22 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     }
 
     private fun initAdapter() {
-        binding {
+        val currentBinding = binding
+        with(currentBinding) {
             comicRecyclerView.adapter =
                 adapter.withLoadStateHeaderAndFooter(header = ComicLoadStateAdapter { adapter.retry() },
                     footer = ComicLoadStateAdapter { adapter.retry() })
 
             comicRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
+            adapter.onItemClickListener = {
+                navigatorListener.displayFoodDetailFragment(it.getId(), it.getTitle())
+            }
+
             adapter.addLoadStateListener { loadState ->
                 val isListEmpty =
                     loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
-                showEmptyList(isListEmpty)
+                showEmptyList(isListEmpty, currentBinding)
 
                 comicRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
                 comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
@@ -103,7 +115,7 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
                 errorState?.let {
                     Toast.makeText(
                         requireContext(),
-                        "Wooops ${it.error}",
+                        "There is an error : ${it.error}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -120,8 +132,8 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
         }
     }
 
-    private fun showEmptyList(show: Boolean) {
-        binding {
+    private fun showEmptyList(show: Boolean, binding: FragmentComicListBinding) {
+        with(binding) {
             if (show) {
                 comicEmptyList.show()
                 comicRecyclerView.hide()

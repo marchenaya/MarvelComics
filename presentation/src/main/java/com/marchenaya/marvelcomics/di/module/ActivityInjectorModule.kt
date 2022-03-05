@@ -2,7 +2,7 @@ package com.marchenaya.marvelcomics.di.module
 
 import com.marchenaya.marvelcomics.di.annotation.PerActivity
 import com.marchenaya.marvelcomics.di.module.activity.MainActivityModule
-import com.marchenaya.marvelcomics.ui.MainActivity
+import com.marchenaya.marvelcomics.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

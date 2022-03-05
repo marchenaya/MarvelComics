@@ -29,4 +29,8 @@ class ApiManagerImpl @Inject constructor(private val marvelApiRetrofitService: M
         return marvelApiRetrofitService.getCreatorsByComicId(comicId).data.results
     }
 
+    override suspend fun getComicById(comicId: Int): ComicRemoteEntity {
+        return marvelApiRetrofitService.getComicById(comicId).data.results[0]
+    }
+
 }

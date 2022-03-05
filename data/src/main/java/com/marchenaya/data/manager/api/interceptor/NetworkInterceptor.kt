@@ -1,6 +1,7 @@
 package com.marchenaya.data.manager.api.interceptor
 
 import com.marchenaya.data.exception.InvalidParametersException
+import com.marchenaya.data.exception.NotFoundException
 import com.marchenaya.data.exception.OfflineException
 import com.marchenaya.data.exception.RequestFailException
 import dagger.Reusable
@@ -35,6 +36,7 @@ class NetworkInterceptor @Inject constructor() : Interceptor {
         if (!response.isSuccessful) {
             when (response.code) {
                 409 -> throw InvalidParametersException()
+                404 -> throw NotFoundException()
                 else -> throw RequestFailException()
             }
         }

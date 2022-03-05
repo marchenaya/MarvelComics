@@ -34,5 +34,6 @@ class ComicRepository @Inject constructor(
             }).flow
     }
 
-
+    suspend fun getComicById(comicId: Int): Comic =
+        comicEntityDataMapper.transformEntityToModel(comicBusinessHelper.getComicById(comicId))
 }

@@ -17,4 +17,6 @@ interface ApiManager {
     suspend fun getCharactersByComicId(comicId: Int): List<CharacterRemoteEntity>
 
     suspend fun getCreatorsByComicId(comicId: Int): List<CreatorRemoteEntity>
+
+    suspend fun getComicById(comicId: Int): ComicRemoteEntity
 }

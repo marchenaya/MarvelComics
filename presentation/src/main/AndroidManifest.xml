@@ -13,8 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarvelComics">
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".ui.main.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="true"
+            android:parentActivityName=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

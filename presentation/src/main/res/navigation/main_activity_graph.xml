@@ -8,5 +8,21 @@
         android:id="@+id/comic_list_fragment"
         android:name="com.marchenaya.marvelcomics.ui.comicList.ComicListFragment"
         android:label="ComicListFragment"
-        tools:layout="@layout/fragment_comic_list" />
+        tools:layout="@layout/fragment_comic_list">
+        <action
+            android:id="@+id/action_comic_list_fragment_to_comicDetailFragment"
+            app:destination="@id/comic_detail_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/comic_detail_fragment"
+        android:name="com.marchenaya.marvelcomics.ui.comicDetail.ComicDetailFragment"
+        android:label="{comic_title}"
+        tools:layout="@layout/fragment_comic_detail">
+        <argument
+            android:name="comic_id"
+            app:argType="integer" />
+        <argument
+            android:name="comic_title"
+            app:argType="string" />
+    </fragment>
 </navigation>

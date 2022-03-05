@@ -21,7 +21,12 @@ class CreatorRemoteEntityDataMapper @Inject constructor(
         return CreatorEntity(
             input.id,
             input.name,
-            "${input.image.path}/$IMAGE_VARIANT.${input.image.extension}"
+            "${
+                input.image.path.replace(
+                    "http",
+                    "https"
+                )
+            }/$IMAGE_VARIANT.${input.image.extension}"
         )
     }
 

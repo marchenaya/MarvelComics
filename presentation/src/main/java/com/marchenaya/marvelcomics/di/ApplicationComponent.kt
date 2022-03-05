@@ -4,6 +4,7 @@ import android.content.Context
 import com.marchenaya.data.di.DataComponent
 import com.marchenaya.marvelcomics.di.annotation.PerApplication
 import com.marchenaya.marvelcomics.di.module.ActivityInjectorModule
+import com.marchenaya.marvelcomics.di.module.ApplicationModule
 import com.marchenaya.marvelcomics.di.module.ViewModelModule
 import com.marchenaya.marvelcomics.ui.MarvelComicsApplication
 import dagger.BindsInstance
@@ -15,7 +16,8 @@ import dagger.android.support.AndroidSupportInjectionModule
     modules = [
         AndroidSupportInjectionModule::class,
         ActivityInjectorModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        ApplicationModule::class
     ],
     dependencies = [
         DataComponent::class

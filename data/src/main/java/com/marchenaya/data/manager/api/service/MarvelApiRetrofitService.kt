@@ -23,14 +23,20 @@ interface MarvelApiRetrofitService {
         @Query("limit") itemsPerPage: Int
     ): ComicDataWrapperRemoteEntity
 
-    @GET("/v1/public/{comicId}/characters?orderBy=name")
+    @GET("/v1/public/comics/{comicId}/characters?orderBy=name")
     suspend fun getCharactersByComicId(
         @Path("comicId") comicId: Int
     ): CharacterDataWrapperRemoteEntity
 
-    @GET("/v1/public/{comicId}/creators?orderBy=name")
+    @GET("/v1/public/comics/{comicId}/creators?orderBy=lastName")
     suspend fun getCreatorsByComicId(
         @Path("comicId") comicId: Int
     ): CreatorDataWrapperRemoteEntity
+
+    @GET("/v1/public/comics/{comicId}")
+    suspend fun getComicById(
+        @Path("comicId") comicId: Int
+    ): ComicDataWrapperRemoteEntity
+
 
 }

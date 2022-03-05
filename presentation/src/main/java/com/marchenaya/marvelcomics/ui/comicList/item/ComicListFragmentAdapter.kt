@@ -10,6 +10,8 @@ import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 class ComicListFragmentAdapter :
     PagingDataAdapter<Comic, ComicListFragmentViewHolder>(ComicItemDiffCallback()) {
 
+    var onItemClickListener: (ComicDataWrapper) -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicListFragmentViewHolder =
         ComicListFragmentViewHolder(
             ComicListItemBinding.inflate(
@@ -20,7 +22,7 @@ class ComicListFragmentAdapter :
     override fun onBindViewHolder(holder: ComicListFragmentViewHolder, position: Int) {
         val comicItem = getItem(position)
         if (comicItem != null) {
-            holder.bind(ComicDataWrapper(comicItem))
+            holder.bind(ComicDataWrapper(comicItem), onItemClickListener)
         }
     }
 

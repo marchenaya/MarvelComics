@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 apply plugin: 'kotlin-kapt'
@@ -66,4 +67,10 @@ dependencies {
     implementation "com.github.bumptech.glide:annotations:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+
+    //Fragment
+    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 }
