@@ -40,7 +40,6 @@ class ComicRemoteEntityDataMapper @Inject constructor(
             urls = input.urls.map { it.url },
             characters = emptyList(),
             creators = emptyList()
-            //todo : a remplir avec un .zip Flow au moment du clic au niveau du repo
         )
     }
 
