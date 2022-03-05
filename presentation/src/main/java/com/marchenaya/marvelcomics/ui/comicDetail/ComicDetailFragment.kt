@@ -15,6 +15,7 @@ import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.ui.comicDetail.person_item.PersonListFragmentAdapter
 import com.marchenaya.marvelcomics.ui.comicDetail.url_item.UrlListFragmentAdapter
+import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 import javax.inject.Inject
 
 const val IMAGE_WIDTH = 300
@@ -96,42 +97,44 @@ class ComicDetailFragment :
     private fun retrieveComicDetail() {
         viewModel.retrieveComicDetail(comicDetailFragmentArgs.comicId)
         viewModel.getComicLiveData().observeSafe(viewLifecycleOwner) {
-            binding {
-                Glide.with(requireContext())
-                    .load(it.getImage())
-                    .placeholder(R.drawable.ic_image)
-                    .override(IMAGE_WIDTH, IMAGE_HEIGHT)
-                    .into(comicDetailImage)
-                comicDetailTitle.text = it.getTitle()
-                if (it.getDescription().isEmpty()) {
-                    comicDetailDescription.hide()
-                } else {
-                    comicDetailDescriptionText.show()
-                    comicDetailDescription.text = it.getDescription()
-                }
-                comicDetailPageCount.text = it.getPageCount().toString()
-
-                if (it.getUrls().isEmpty()) {
-                    comicDetailUrlsRecyclerView.hide()
-                } else {
-                    comicDetailUrlsText.show()
-                    urlListFragmentAdapter.setItems(it.getUrls())
-                }
-                if (it.getCharacters().isEmpty()) {
-                    comicDetailCharactersRecyclerView.hide()
-                } else {
-                    comicDetailCharactersText.show()
-                    charactersListFragmentAdapter.setItems(it.getCharacters())
-                }
-                if (it.getCreators().isEmpty()) {
-                    comicDetailCreatorsRecyclerView.hide()
-                } else {
-                    comicDetailCreatorsText.show()
-                    creatorsListFragmentAdapter.setItems(it.getCreators())
-                }
-            }
+            fillDetail(it)
             endOfLoading()
+        }
+    }
 
+    private fun fillDetail(comicDataWrapper: ComicDataWrapper) {
+        binding {
+            Glide.with(requireContext())
+                .load(comicDataWrapper.getImage())
+                .placeholder(R.drawable.ic_image)
+                .override(IMAGE_WIDTH, IMAGE_HEIGHT)
+                .into(comicDetailImage)
+            comicDetailTitle.text = comicDataWrapper.getTitle()
+            if (comicDataWrapper.getDescription().isEmpty()) {
+                comicDetailDescription.hide()
+            } else {
+                comicDetailDescriptionText.show()
+                comicDetailDescription.text = comicDataWrapper.getDescription()
+            }
+            comicDetailPageCount.text = comicDataWrapper.getPageCount().toString()
+            if (comicDataWrapper.getUrls().isEmpty()) {
+                comicDetailUrlsRecyclerView.hide()
+            } else {
+                comicDetailUrlsText.show()
+                urlListFragmentAdapter.setItems(comicDataWrapper.getUrls())
+            }
+            if (comicDataWrapper.getCharacters().isEmpty()) {
+                comicDetailCharactersRecyclerView.hide()
+            } else {
+                comicDetailCharactersText.show()
+                charactersListFragmentAdapter.setItems(comicDataWrapper.getCharacters())
+            }
+            if (comicDataWrapper.getCreators().isEmpty()) {
+                comicDetailCreatorsRecyclerView.hide()
+            } else {
+                comicDetailCreatorsText.show()
+                creatorsListFragmentAdapter.setItems(comicDataWrapper.getCreators())
+            }
         }
     }
 

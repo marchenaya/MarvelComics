@@ -6,8 +6,9 @@ import androidx.paging.PagingDataAdapter
 import com.marchenaya.data.model.Comic
 import com.marchenaya.marvelcomics.databinding.ComicListItemBinding
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
+import javax.inject.Inject
 
-class ComicListFragmentAdapter :
+class ComicListFragmentAdapter @Inject constructor() :
     PagingDataAdapter<Comic, ComicListFragmentViewHolder>(ComicItemDiffCallback()) {
 
     var onItemClickListener: (ComicDataWrapper) -> Unit = {}

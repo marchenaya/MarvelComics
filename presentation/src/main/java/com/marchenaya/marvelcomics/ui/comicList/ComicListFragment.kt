@@ -31,6 +31,9 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     @Inject
     lateinit var navigatorListener: ComicListFragmentNavigatorListener
 
+    @Inject
+    lateinit var comicListFragmentAdapter: ComicListFragmentAdapter
+
     private var query = ""
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicListBinding =
@@ -38,15 +41,13 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     override val viewModelClass = ComicListFragmentViewModel::class
 
-    private val adapter = ComicListFragmentAdapter()
-
     private var searchJob: Job? = null
 
     private fun getComics(query: String = "") {
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
             viewModel.getComics(query).collect {
-                adapter.submitData(it)
+                comicListFragmentAdapter.submitData(it)
             }
         }
     }
@@ -83,25 +84,25 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
         getComics()
         initGetComics()
 
-        binding.comicRetryButton.setOnClickListener { adapter.retry() }
+        binding.comicRetryButton.setOnClickListener { comicListFragmentAdapter.retry() }
     }
 
     private fun initAdapter() {
         val currentBinding = binding
         with(currentBinding) {
             comicRecyclerView.adapter =
-                adapter.withLoadStateHeaderAndFooter(header = ComicLoadStateAdapter { adapter.retry() },
-                    footer = ComicLoadStateAdapter { adapter.retry() })
+                comicListFragmentAdapter.withLoadStateHeaderAndFooter(header = ComicLoadStateAdapter { comicListFragmentAdapter.retry() },
+                    footer = ComicLoadStateAdapter { comicListFragmentAdapter.retry() })
 
             comicRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-            adapter.onItemClickListener = {
+            comicListFragmentAdapter.onItemClickListener = {
                 navigatorListener.displayFoodDetailFragment(it.getId(), it.getTitle())
             }
 
-            adapter.addLoadStateListener { loadState ->
+            comicListFragmentAdapter.addLoadStateListener { loadState ->
                 val isListEmpty =
-                    loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    loadState.refresh is LoadState.NotLoading && comicListFragmentAdapter.itemCount == 0
                 showEmptyList(isListEmpty, currentBinding)
 
                 comicRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
@@ -125,7 +126,7 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private fun initGetComics() {
         lifecycleScope.launch {
-            adapter.loadStateFlow
+            comicListFragmentAdapter.loadStateFlow
                 .distinctUntilChangedBy { it.refresh }
                 .filter { it.refresh is LoadState.NotLoading }
                 .collect { binding.comicRecyclerView.scrollToPosition(0) }
