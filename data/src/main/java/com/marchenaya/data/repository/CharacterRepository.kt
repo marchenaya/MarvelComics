@@ -14,7 +14,7 @@ class CharacterRepository @Inject constructor(
 
     suspend fun getCharacterListById(comicId: Int): List<Character> =
         characterEntityDataMapper.transformEntityList(
-            characterBusinessHelper.getCharacterListById(
+            characterBusinessHelper.getCharacterListByIdFromApi(
                 comicId
             )
         )

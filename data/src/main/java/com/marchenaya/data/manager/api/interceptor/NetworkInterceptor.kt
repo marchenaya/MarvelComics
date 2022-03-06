@@ -5,7 +5,6 @@ import com.marchenaya.data.exception.NotFoundException
 import com.marchenaya.data.exception.OfflineException
 import com.marchenaya.data.exception.RequestFailException
 import dagger.Reusable
-import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -25,8 +24,7 @@ class NetworkInterceptor @Inject constructor() : Interceptor {
         } catch (exception: Exception) {
             when (exception) {
                 is SocketTimeoutException,
-                is TimeoutException,
-                is ConnectException -> throw OfflineException()
+                is TimeoutException -> throw OfflineException()
                 else -> throw exception
             }
         }

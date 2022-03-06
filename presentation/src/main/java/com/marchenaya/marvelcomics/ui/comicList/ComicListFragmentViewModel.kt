@@ -15,14 +15,15 @@ class ComicListFragmentViewModel @Inject constructor(private val comicRepository
     private var currentQueryValue: String? = null
     private var comicFlow: Flow<PagingData<Comic>>? = null
 
-    fun getComics(query: String): Flow<PagingData<Comic>> {
+    fun getComics(query: String, isNetworkAvailable: Boolean): Flow<PagingData<Comic>> {
         val lastResult = comicFlow
         if (query == currentQueryValue && lastResult != null) {
             return lastResult
         }
         currentQueryValue = query
-        val newResult: Flow<PagingData<Comic>> = comicRepository.getComicList(query)
-            .cachedIn(viewModelScope)
+        val newResult: Flow<PagingData<Comic>> =
+            comicRepository.getComicList(query, isNetworkAvailable)
+                .cachedIn(viewModelScope)
         comicFlow = newResult
         return newResult
     }

@@ -16,6 +16,8 @@ class ComicEntityDataMapper @Inject constructor(
     override fun transformEntityToModel(input: ComicEntity): Comic {
         return Comic(
             id = input.id,
+            prevKey = null,
+            nextKey = null,
             title = input.title,
             description = input.description,
             pageCount = input.pageCount,

@@ -13,6 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
+import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.show
@@ -34,6 +35,9 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     @Inject
     lateinit var comicListFragmentAdapter: ComicListFragmentAdapter
 
+    @Inject
+    lateinit var networkManager: NetworkManager
+
     private var query = ""
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicListBinding =
@@ -45,12 +49,22 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private fun getComics(query: String = "") {
         searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.getComics(query).collect {
-                comicListFragmentAdapter.submitData(it)
+        networkManager.getConnectivityManager(requireContext(), onAvailableNetwork = {
+            searchJob = lifecycleScope.launch {
+                viewModel.getComics(query, true).collect {
+                    comicListFragmentAdapter.submitData(it)
+                }
             }
-        }
+        }, onLostNetwork = {
+            searchJob = lifecycleScope.launch {
+                viewModel.getComics(query, false).collect {
+                    comicListFragmentAdapter.submitData(it)
+                }
+            }
+        })
+
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

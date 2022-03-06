@@ -22,18 +22,20 @@ class MarvelPagingSource(
         val position = params.key ?: MARVEL_STARTING_PAGE_INDEX
         return try {
             val response = if (query.isEmpty()) {
-                comicBusinessHelper.getComicList(position, params.loadSize)
+                comicBusinessHelper.getComicListFromApi(position, params.loadSize)
             } else {
-                comicBusinessHelper.getComicListByTitle(query, position, params.loadSize)
+                comicBusinessHelper.getComicListByTitleFromApi(query, position, params.loadSize)
             }
             val nextKey = if (response.isEmpty()) {
                 null
             } else {
                 position + (params.loadSize / BuildConfig.NETWORK_PAGE_SIZE)
             }
+            val prevKey = if (position == MARVEL_STARTING_PAGE_INDEX) null else position - 1
             LoadResult.Page(
-                data = comicEntityDataMapper.transformEntityList(response),
-                prevKey = if (position == MARVEL_STARTING_PAGE_INDEX) null else position - 1,
+                data = comicEntityDataMapper.transformEntityList(response)
+                    .map { it.copy(prevKey = prevKey, nextKey = nextKey) },
+                prevKey = prevKey,
                 nextKey = nextKey
             )
         } catch (exception: IOException) {

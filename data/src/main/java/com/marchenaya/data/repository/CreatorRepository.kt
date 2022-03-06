@@ -14,7 +14,7 @@ class CreatorRepository @Inject constructor(
 
     suspend fun getCreatorListById(comicId: Int): List<Creator> =
         creatorEntityDataMapper.transformEntityList(
-            creatorBusinessHelper.getCreatorListById(
+            creatorBusinessHelper.getCreatorListByIdFromApi(
                 comicId
             )
         )

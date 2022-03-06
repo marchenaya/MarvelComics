@@ -9,7 +9,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        minSdk 22
+        minSdk 24
         targetSdk 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,6 +39,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = javaVersion
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
 }
 
@@ -68,5 +69,11 @@ dependencies {
 
     //Paging
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+    //Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.room:room-paging:$roomVersion"
 
 }

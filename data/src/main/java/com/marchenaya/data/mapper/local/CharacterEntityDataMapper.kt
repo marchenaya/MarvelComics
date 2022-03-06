@@ -12,12 +12,13 @@ class CharacterEntityDataMapper @Inject constructor(
 ) : ModelMapper<Character, CharacterEntity>() {
 
     override fun transformEntityToModel(input: CharacterEntity): Character {
-        return Character(input.id, input.name, input.image)
+        return Character(input.id, null, input.name, input.image)
     }
 
     override fun transformModelToEntity(input: Character): CharacterEntity {
         return CharacterEntity(
             input.id,
+            null,
             input.name,
             input.image
         )

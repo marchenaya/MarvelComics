@@ -35,4 +35,5 @@ ext {
     pagingVersion = "3.1.0"
     glideVersion = '4.13.1'
     fragmentKtxVersion = '1.4.1'
+    roomVersion = '2.4.2'
 }

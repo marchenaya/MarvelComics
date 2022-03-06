@@ -20,6 +20,7 @@ class CreatorRemoteEntityDataMapper @Inject constructor(
     override fun transformRemoteToEntity(input: CreatorRemoteEntity): CreatorEntity {
         return CreatorEntity(
             input.id,
+            null,
             input.name,
             "${
                 input.image.path.replace(

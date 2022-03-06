@@ -2,15 +2,27 @@ package com.marchenaya.data.di.module
 
 import com.marchenaya.data.manager.api.ApiManager
 import com.marchenaya.data.manager.api.ApiManagerImpl
-import dagger.Binds
+import com.marchenaya.data.manager.db.DBManager
+import com.marchenaya.data.manager.db.DBManagerImpl
+import com.marchenaya.data.manager.network.NetworkManager
+import com.marchenaya.data.manager.network.NetworkManagerImpl
 import dagger.Module
-import javax.inject.Singleton
+import dagger.Provides
+import dagger.Reusable
 
 @Module
-abstract class ManagerModule {
+class ManagerModule {
 
-    @Binds
-    @Singleton
-    abstract fun provideApiManager(apiManagerImpl: ApiManagerImpl): ApiManager
+    @Provides
+    @Reusable
+    fun apiManager(apiManagerImpl: ApiManagerImpl): ApiManager = apiManagerImpl
+
+    @Provides
+    @Reusable
+    fun dbManager(dbManagerImpl: DBManagerImpl): DBManager = dbManagerImpl
+
+    @Provides
+    @Reusable
+    fun networkManager(networkManagerImpl: NetworkManagerImpl): NetworkManager = networkManagerImpl
 
 }
