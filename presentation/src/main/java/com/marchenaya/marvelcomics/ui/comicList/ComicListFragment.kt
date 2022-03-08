@@ -17,8 +17,8 @@ import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.show
-import com.marchenaya.marvelcomics.ui.comicList.item.ComicListFragmentAdapter
-import com.marchenaya.marvelcomics.ui.comicList.load.ComicLoadStateAdapter
+import com.marchenaya.marvelcomics.ui.comicList.loadItem.ComicLoadStateAdapter
+import com.marchenaya.marvelcomics.ui.comicList.networkItem.ComicListFragmentAdapter
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -49,22 +49,12 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private fun getComics(query: String = "") {
         searchJob?.cancel()
-        networkManager.getConnectivityManager(requireContext(), onAvailableNetwork = {
-            searchJob = lifecycleScope.launch {
-                viewModel.getComics(query, true).collect {
-                    comicListFragmentAdapter.submitData(it)
-                }
+        searchJob = lifecycleScope.launch {
+            viewModel.getComics(query).collect {
+                comicListFragmentAdapter.submitData(it)
             }
-        }, onLostNetwork = {
-            searchJob = lifecycleScope.launch {
-                viewModel.getComics(query, false).collect {
-                    comicListFragmentAdapter.submitData(it)
-                }
-            }
-        })
-
+        }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +70,8 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
         searchView.queryHint = getString(R.string.search_menu_button)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(query: String?) = false
-            override fun onQueryTextSubmit(newText: String?): Boolean {
+            override fun onQueryTextSubmit(query: String?) = false
+            override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let {
                     query = it
                     getComics(it)
@@ -98,7 +88,14 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
         getComics()
         initGetComics()
 
-        binding.comicRetryButton.setOnClickListener { comicListFragmentAdapter.retry() }
+
+        networkManager.getConnectivityManager(requireContext(), {
+            getComics()
+        }, {
+            getComics()
+        })
+
+        //binding.comicRetryButton.setOnClickListener { comicListFragmentAdapter.retry() }
     }
 
     private fun initAdapter() {
@@ -120,8 +117,9 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
                 showEmptyList(isListEmpty, currentBinding)
 
                 comicRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-                comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                comicRetryButton.isVisible = loadState.source.refresh is LoadState.Error
+
+//                comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                //comicRetryButton.isVisible = loadState.source.refresh is LoadState.Error
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error

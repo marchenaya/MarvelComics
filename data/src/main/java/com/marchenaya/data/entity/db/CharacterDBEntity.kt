@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "character")
 data class CharacterDBEntity(
     @PrimaryKey val id: Int,
-    val comicId: Int?,
+    val comicId: Int? = 0,
     val name: String,
     val image: String
 )

@@ -1,4 +1,4 @@
-package com.marchenaya.marvelcomics.ui.comicList.load
+package com.marchenaya.marvelcomics.ui.comicList.loadItem
 
 import androidx.core.view.isVisible
 import androidx.paging.LoadState

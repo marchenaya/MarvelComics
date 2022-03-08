@@ -19,7 +19,8 @@ class ComicDBEntityDataMapper @Inject constructor(private val traceComponent: Tr
             image = input.image,
             urls = emptyList(),
             characters = emptyList(),
-            creators = emptyList()
+            creators = emptyList(),
+            favorite = input.favorite
         )
     }
 
@@ -29,7 +30,8 @@ class ComicDBEntityDataMapper @Inject constructor(private val traceComponent: Tr
             title = input.title,
             description = input.description,
             pageCount = input.pageCount,
-            image = input.image
+            image = input.image,
+            favorite = input.favorite
         )
     }
 

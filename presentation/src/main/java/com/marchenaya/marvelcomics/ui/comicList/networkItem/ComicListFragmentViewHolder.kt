@@ -1,4 +1,4 @@
-package com.marchenaya.marvelcomics.ui.comicList.item
+package com.marchenaya.marvelcomics.ui.comicList.networkItem
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

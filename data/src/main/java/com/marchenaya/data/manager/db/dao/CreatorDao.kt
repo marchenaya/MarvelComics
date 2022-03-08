@@ -5,18 +5,18 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.marchenaya.data.model.Creator
+import com.marchenaya.data.entity.db.CreatorDBEntity
 
 @Dao
 interface CreatorDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCreatorList(creatorList: List<Creator>)
+    suspend fun saveCreatorList(creatorList: List<CreatorDBEntity>)
 
     @Query("SELECT * FROM creator WHERE comicId = :comicId")
-    suspend fun getCreatorsByComicId(comicId: Int): List<Creator>
+    suspend fun getCreatorsByComicId(comicId: Int): List<CreatorDBEntity>
 
     @Delete
-    suspend fun removeCreatorList(creatorList: List<Creator>)
+    suspend fun removeCreatorList(creatorList: List<CreatorDBEntity>)
 
 }

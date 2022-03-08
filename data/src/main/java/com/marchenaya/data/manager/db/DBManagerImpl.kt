@@ -1,70 +1,62 @@
 package com.marchenaya.data.manager.db
 
 import androidx.paging.PagingSource
-import com.marchenaya.data.model.Character
-import com.marchenaya.data.model.Comic
-import com.marchenaya.data.model.ComicKey
-import com.marchenaya.data.model.ComicUrl
-import com.marchenaya.data.model.Creator
+import com.marchenaya.data.entity.db.CharacterDBEntity
+import com.marchenaya.data.entity.db.ComicDBEntity
+import com.marchenaya.data.entity.db.CreatorDBEntity
+import com.marchenaya.data.entity.db.UrlDBEntity
 import javax.inject.Inject
 
 class DBManagerImpl @Inject constructor(private val database: MarvelDatabase) : DBManager {
 
-    override suspend fun saveComic(comic: Comic) {
-        database.comicDao().saveComic(comic)
+    override suspend fun saveComic(comicDBEntity: ComicDBEntity) {
+        database.comicDao().saveComic(comicDBEntity)
     }
 
-    override suspend fun getComicById(comicId: Int): Comic =
+    override suspend fun getComicById(comicId: Int): ComicDBEntity? =
         database.comicDao().getComicById(comicId)
 
-    override fun getComicsByTitle(title: String): PagingSource<Int, Comic> =
+    override fun getComicsByTitle(title: String): PagingSource<Int, ComicDBEntity> =
         database.comicDao().getComicsByTitle(title)
 
-    override suspend fun removeComic(comic: Comic) {
-        database.comicDao().removeComic(comic)
+    override suspend fun getComicsByTitleList(title: String): List<ComicDBEntity> =
+        database.comicDao().getComicsByTitleList(title)
+
+    override suspend fun removeComic(comicDBEntity: ComicDBEntity) {
+        database.comicDao().removeComic(comicDBEntity)
     }
 
-    override suspend fun saveCharacterList(characterList: List<Character>) {
-        database.characterDao().saveCharacterList(characterList)
+    override suspend fun saveCharacterList(characterDBEntityList: List<CharacterDBEntity>) {
+        database.characterDao().saveCharacterList(characterDBEntityList)
     }
 
-    override suspend fun getCharactersByComicId(comicId: Int): List<Character> =
+    override suspend fun getCharactersByComicId(comicId: Int): List<CharacterDBEntity> =
         database.characterDao().getCharactersByComicId(comicId)
 
-    override suspend fun removeCharacterList(characterList: List<Character>) {
-        database.characterDao().removeCharacterList(characterList)
+    override suspend fun removeCharacterList(characterDBEntityList: List<CharacterDBEntity>) {
+        database.characterDao().removeCharacterList(characterDBEntityList)
     }
 
-    override suspend fun saveCreatorList(creatorList: List<Creator>) {
-        database.creatorDao().removeCreatorList(creatorList)
+    override suspend fun saveCreatorList(creatorDBEntityList: List<CreatorDBEntity>) {
+        database.creatorDao().saveCreatorList(creatorDBEntityList)
     }
 
-    override suspend fun getCreatorsByComicId(comicId: Int): List<Creator> =
+    override suspend fun getCreatorsByComicId(comicId: Int): List<CreatorDBEntity> =
         database.creatorDao().getCreatorsByComicId(comicId)
 
-    override suspend fun removeCreatorList(creatorList: List<Creator>) {
-        database.creatorDao().removeCreatorList(creatorList)
+    override suspend fun removeCreatorList(creatorDBEntityList: List<CreatorDBEntity>) {
+        database.creatorDao().removeCreatorList(creatorDBEntityList)
     }
 
-    override suspend fun saveUrlList(comicUrlList: List<ComicUrl>) {
-        database.urlDao().saveUrlList(comicUrlList)
+    override suspend fun saveUrlList(urlDBEntityList: List<UrlDBEntity>) {
+        database.urlDao().saveUrlList(urlDBEntityList)
     }
 
-    override suspend fun getUrlsByComicId(comicId: Int): List<ComicUrl> =
+    override suspend fun getUrlsByComicId(comicId: Int): List<UrlDBEntity> =
         database.urlDao().getUrlsByComicId(comicId)
 
-    override suspend fun removeUrlList(comicUrlList: List<ComicUrl>) {
-        database.urlDao().removeUrlList(comicUrlList)
+    override suspend fun removeUrlList(urlDBEntityList: List<UrlDBEntity>) {
+        database.urlDao().removeUrlList(urlDBEntityList)
     }
 
-    override suspend fun saveKey(comicKey: ComicKey) {
-        database.keyDao().saveKey(comicKey)
-    }
-
-    override suspend fun getKeyByComicId(comicId: Int): ComicKey =
-        database.keyDao().getKeyByComicId(comicId)
-
-    override suspend fun removeKey(comicKey: ComicKey) {
-        database.keyDao().removeKey(comicKey)
-    }
 }

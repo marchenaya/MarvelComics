@@ -1,4 +1,4 @@
-package com.marchenaya.marvelcomics.ui.comicList.item
+package com.marchenaya.marvelcomics.ui.comicList.networkItem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -16,15 +16,14 @@ class ComicEntityDataMapper @Inject constructor(
     override fun transformEntityToModel(input: ComicEntity): Comic {
         return Comic(
             id = input.id,
-            prevKey = null,
-            nextKey = null,
             title = input.title,
             description = input.description,
             pageCount = input.pageCount,
             image = input.image,
             urls = input.urls,
             characters = characterEntityDataMapper.transformEntityList(input.characters),
-            creators = creatorEntityDataMapper.transformEntityList(input.creators)
+            creators = creatorEntityDataMapper.transformEntityList(input.creators),
+            favorite = input.favorite
         )
     }
 
@@ -37,7 +36,8 @@ class ComicEntityDataMapper @Inject constructor(
             image = input.image,
             urls = input.urls,
             characters = characterEntityDataMapper.transformModelList(input.characters),
-            creators = creatorEntityDataMapper.transformModelList(input.creators)
+            creators = creatorEntityDataMapper.transformModelList(input.creators),
+            favorite = input.favorite
         )
     }
 

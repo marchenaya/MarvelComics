@@ -13,7 +13,6 @@ class CreatorDBEntityDataMapper @Inject constructor(private val traceComponent: 
     override fun transformDBToEntity(input: CreatorDBEntity): CreatorEntity {
         return CreatorEntity(
             input.id,
-            input.comicId,
             input.name,
             input.image
         )
@@ -22,7 +21,7 @@ class CreatorDBEntityDataMapper @Inject constructor(private val traceComponent: 
     override fun transformEntityToDB(input: CreatorEntity): CreatorDBEntity {
         return CreatorDBEntity(
             input.id,
-            input.comicId,
+            null,
             input.name,
             input.image
         )

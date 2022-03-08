@@ -4,19 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.marchenaya.data.entity.db.CharacterDBEntity
+import com.marchenaya.data.entity.db.ComicDBEntity
+import com.marchenaya.data.entity.db.CreatorDBEntity
+import com.marchenaya.data.entity.db.UrlDBEntity
 import com.marchenaya.data.manager.db.dao.CharacterDao
 import com.marchenaya.data.manager.db.dao.ComicDao
 import com.marchenaya.data.manager.db.dao.CreatorDao
-import com.marchenaya.data.manager.db.dao.KeyDao
 import com.marchenaya.data.manager.db.dao.UrlDao
-import com.marchenaya.data.model.Character
-import com.marchenaya.data.model.Comic
-import com.marchenaya.data.model.ComicKey
-import com.marchenaya.data.model.ComicUrl
-import com.marchenaya.data.model.Creator
 
 @Database(
-    entities = [Comic::class, Character::class, Creator::class, ComicUrl::class, ComicKey::class],
+    entities = [ComicDBEntity::class, CharacterDBEntity::class, CreatorDBEntity::class, UrlDBEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -29,8 +27,6 @@ abstract class MarvelDatabase : RoomDatabase() {
     abstract fun creatorDao(): CreatorDao
 
     abstract fun urlDao(): UrlDao
-
-    abstract fun keyDao(): KeyDao
 
     companion object {
         private const val DATABASE_NAME = "marvel_database"

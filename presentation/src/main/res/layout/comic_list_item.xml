@@ -4,8 +4,7 @@
     android:id="@+id/food_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/base_margin"
-    android:layout_marginTop="@dimen/base_margin">
+    android:layout_margin="@dimen/base_margin">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

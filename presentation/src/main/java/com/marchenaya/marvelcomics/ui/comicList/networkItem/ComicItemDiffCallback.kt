@@ -1,4 +1,4 @@
-package com.marchenaya.marvelcomics.ui.comicList.item
+package com.marchenaya.marvelcomics.ui.comicList.networkItem
 
 import androidx.recyclerview.widget.DiffUtil
 import com.marchenaya.data.model.Comic

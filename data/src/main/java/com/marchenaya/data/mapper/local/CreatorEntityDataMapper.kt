@@ -12,13 +12,12 @@ class CreatorEntityDataMapper @Inject constructor(
 ) : ModelMapper<Creator, CreatorEntity>() {
 
     override fun transformEntityToModel(input: CreatorEntity): Creator {
-        return Creator(input.id, null, input.name, input.image)
+        return Creator(input.id, input.name, input.image)
     }
 
     override fun transformModelToEntity(input: Creator): CreatorEntity {
         return CreatorEntity(
             input.id,
-            null,
             input.name,
             input.image
         )

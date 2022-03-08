@@ -9,16 +9,16 @@ import javax.inject.Inject
 class ApiManagerImpl @Inject constructor(private val marvelApiRetrofitService: MarvelApiRetrofitService) :
     ApiManager {
 
-    override suspend fun getComics(page: Int, itemsPerPage: Int): List<ComicRemoteEntity> {
-        return marvelApiRetrofitService.getComics(page, itemsPerPage).data.results
+    override suspend fun getComics(position: Int, itemsPerPage: Int): List<ComicRemoteEntity> {
+        return marvelApiRetrofitService.getComics(position, itemsPerPage).data.results
     }
 
     override suspend fun getComicsByTitle(
         query: String,
-        page: Int,
+        position: Int,
         itemsPerPage: Int
     ): List<ComicRemoteEntity> {
-        return marvelApiRetrofitService.getComicsByTitle(query, page, itemsPerPage).data.results
+        return marvelApiRetrofitService.getComicsByTitle(query, position, itemsPerPage).data.results
     }
 
     override suspend fun getCharactersByComicId(comicId: Int): List<CharacterRemoteEntity> {

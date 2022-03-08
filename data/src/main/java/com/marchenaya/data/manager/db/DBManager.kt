@@ -1,33 +1,29 @@
 package com.marchenaya.data.manager.db
 
 import androidx.paging.PagingSource
-import com.marchenaya.data.model.Character
-import com.marchenaya.data.model.Comic
-import com.marchenaya.data.model.ComicKey
-import com.marchenaya.data.model.ComicUrl
-import com.marchenaya.data.model.Creator
+import com.marchenaya.data.entity.db.CharacterDBEntity
+import com.marchenaya.data.entity.db.ComicDBEntity
+import com.marchenaya.data.entity.db.CreatorDBEntity
+import com.marchenaya.data.entity.db.UrlDBEntity
 
 interface DBManager {
 
-    suspend fun saveComic(comic: Comic)
-    suspend fun getComicById(comicId: Int): Comic
-    fun getComicsByTitle(title: String): PagingSource<Int, Comic>
-    suspend fun removeComic(comic: Comic)
+    suspend fun saveComic(comicDBEntity: ComicDBEntity)
+    suspend fun getComicById(comicId: Int): ComicDBEntity?
+    fun getComicsByTitle(title: String): PagingSource<Int, ComicDBEntity>
+    suspend fun getComicsByTitleList(title: String): List<ComicDBEntity>
+    suspend fun removeComic(comicDBEntity: ComicDBEntity)
 
-    suspend fun saveCharacterList(characterList: List<Character>)
-    suspend fun getCharactersByComicId(comicId: Int): List<Character>
-    suspend fun removeCharacterList(characterList: List<Character>)
+    suspend fun saveCharacterList(characterDBEntityList: List<CharacterDBEntity>)
+    suspend fun getCharactersByComicId(comicId: Int): List<CharacterDBEntity>
+    suspend fun removeCharacterList(characterDBEntityList: List<CharacterDBEntity>)
 
-    suspend fun saveCreatorList(creatorList: List<Creator>)
-    suspend fun getCreatorsByComicId(comicId: Int): List<Creator>
-    suspend fun removeCreatorList(creatorList: List<Creator>)
+    suspend fun saveCreatorList(creatorDBEntityList: List<CreatorDBEntity>)
+    suspend fun getCreatorsByComicId(comicId: Int): List<CreatorDBEntity>
+    suspend fun removeCreatorList(creatorDBEntityList: List<CreatorDBEntity>)
 
-    suspend fun saveUrlList(comicUrlList: List<ComicUrl>)
-    suspend fun getUrlsByComicId(comicId: Int): List<ComicUrl>
-    suspend fun removeUrlList(comicUrlList: List<ComicUrl>)
-
-    suspend fun saveKey(comicKey: ComicKey)
-    suspend fun getKeyByComicId(comicId: Int): ComicKey
-    suspend fun removeKey(comicKey: ComicKey)
+    suspend fun saveUrlList(urlDBEntityList: List<UrlDBEntity>)
+    suspend fun getUrlsByComicId(comicId: Int): List<UrlDBEntity>
+    suspend fun removeUrlList(urlDBEntityList: List<UrlDBEntity>)
 
 }

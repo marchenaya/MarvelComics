@@ -11,6 +11,10 @@ fun View.hide() {
     visibility = View.GONE
 }
 
+fun MenuItem.show() {
+    isVisible = true
+}
+
 fun MenuItem.hide() {
     isVisible = false
 }

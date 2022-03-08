@@ -8,5 +8,6 @@ data class ComicEntity(
     val image: String,
     val urls: List<String>,
     val characters: List<CharacterEntity>,
-    val creators: List<CreatorEntity>
+    val creators: List<CreatorEntity>,
+    val favorite: Boolean
 )

@@ -6,22 +6,24 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.marchenaya.data.model.Comic
+import com.marchenaya.data.entity.db.ComicDBEntity
 
-//Impossible to use clean architecture with Paging, usually it use a ComicDBEntity
 @Dao
 interface ComicDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveComic(comic: Comic)
+    suspend fun saveComic(comic: ComicDBEntity)
 
     @Query("SELECT * FROM comic WHERE id = :comicId")
-    suspend fun getComicById(comicId: Int): Comic
+    suspend fun getComicById(comicId: Int): ComicDBEntity?
 
     @Query("SELECT * FROM comic WHERE title LIKE (:title) ORDER BY title ASC")
-    fun getComicsByTitle(title: String): PagingSource<Int, Comic>
+    fun getComicsByTitle(title: String): PagingSource<Int, ComicDBEntity>
+
+    @Query("SELECT * FROM comic WHERE title LIKE (:title) ORDER BY title ASC")
+    suspend fun getComicsByTitleList(title: String): List<ComicDBEntity>
 
     @Delete
-    suspend fun removeComic(comic: Comic)
+    suspend fun removeComic(comic: ComicDBEntity)
 
 }

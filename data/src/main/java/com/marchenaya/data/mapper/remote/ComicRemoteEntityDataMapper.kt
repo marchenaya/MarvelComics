@@ -39,7 +39,8 @@ class ComicRemoteEntityDataMapper @Inject constructor(
             }/$IMAGE_VARIANT.${input.image.extension}",
             urls = input.urls.map { it.url },
             characters = emptyList(),
-            creators = emptyList()
+            creators = emptyList(),
+            favorite = false
         )
     }
 

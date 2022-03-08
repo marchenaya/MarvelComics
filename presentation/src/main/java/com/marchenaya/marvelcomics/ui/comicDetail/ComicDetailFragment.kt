@@ -2,6 +2,8 @@ package com.marchenaya.marvelcomics.ui.comicDetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
@@ -26,6 +28,8 @@ class ComicDetailFragment :
 
     private lateinit var comicDetailFragmentArgs: ComicDetailFragmentArgs
 
+    private lateinit var menuItem: MenuItem
+
     @Inject
     lateinit var urlListFragmentAdapter: UrlListFragmentAdapter
 
@@ -42,6 +46,7 @@ class ComicDetailFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         getComicDetailFragmentArgs()
     }
 
@@ -57,6 +62,31 @@ class ComicDetailFragment :
         retrieveComicDetail()
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        menuItem = menu.findItem(R.id.activity_main_menu_favorite)
+
+        viewModel.isCurrentComicFavorite().observeSafe(viewLifecycleOwner) {
+            if (it) {
+                menuItem.setIcon(R.drawable.ic_favorite)
+            } else {
+                menuItem.setIcon(R.drawable.ic_not_favorite)
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.activity_main_menu_favorite -> {
+            if (viewModel.changeFavorite()) {
+                item.setIcon(R.drawable.ic_favorite)
+            } else {
+                item.setIcon(R.drawable.ic_not_favorite)
+            }
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
 
     private fun startOfLoading() {
         binding {
@@ -143,6 +173,7 @@ class ComicDetailFragment :
             comicDetailTitleText.show()
             comicDetailPageCountText.show()
             comicDetailProgressBar.hide()
+            menuItem.show()
         }
     }
 

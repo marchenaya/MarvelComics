@@ -20,7 +20,6 @@ class CharacterRemoteEntityDataMapper @Inject constructor(
     override fun transformRemoteToEntity(input: CharacterRemoteEntity): CharacterEntity {
         return CharacterEntity(
             input.id,
-            null,
             input.name,
             "${
                 input.image.path.replace(

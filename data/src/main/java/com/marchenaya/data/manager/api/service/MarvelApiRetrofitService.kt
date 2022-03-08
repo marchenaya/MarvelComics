@@ -12,14 +12,14 @@ interface MarvelApiRetrofitService {
 
     @GET("/v1/public/comics?orderBy=title")
     suspend fun getComics(
-        @Query("offset") page: Int,
+        @Query("offset") position: Int,
         @Query("limit") itemsPerPage: Int
     ): ComicDataWrapperRemoteEntity
 
     @GET("/v1/public/comics?orderBy=title")
     suspend fun getComicsByTitle(
         @Query("titleStartsWith") query: String,
-        @Query("offset") page: Int,
+        @Query("offset") position: Int,
         @Query("limit") itemsPerPage: Int
     ): ComicDataWrapperRemoteEntity
 

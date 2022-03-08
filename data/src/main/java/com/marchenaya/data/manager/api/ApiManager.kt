@@ -6,11 +6,11 @@ import com.marchenaya.data.entity.remote.CreatorRemoteEntity
 
 interface ApiManager {
 
-    suspend fun getComics(page: Int, itemsPerPage: Int): List<ComicRemoteEntity>
+    suspend fun getComics(position: Int, itemsPerPage: Int): List<ComicRemoteEntity>
 
     suspend fun getComicsByTitle(
         query: String,
-        page: Int,
+        position: Int,
         itemsPerPage: Int
     ): List<ComicRemoteEntity>
 
