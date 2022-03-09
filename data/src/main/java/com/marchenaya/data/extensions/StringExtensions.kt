@@ -1,4 +1,4 @@
-package com.marchenaya.data.extension
+package com.marchenaya.data.extensions
 
 import com.marchenaya.data.entity.remote.ImageRemoteEntity
 

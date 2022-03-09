@@ -20,7 +20,7 @@ class ComicRepository @Inject constructor(
     private val networkManager: NetworkManager
 ) {
 
-    fun getComicList(query: String): Flow<PagingData<Comic>> {
+    fun getComicList(query: String, filterByFavorite: Boolean): Flow<PagingData<Comic>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
@@ -30,6 +30,7 @@ class ComicRepository @Inject constructor(
             pagingSourceFactory = {
                 MarvelPagingSource(
                     query,
+                    filterByFavorite,
                     comicBusinessHelper,
                     comicEntityDataMapper,
                     networkManager

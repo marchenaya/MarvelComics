@@ -25,36 +25,41 @@ class ComicBusinessHelper @Inject constructor(
     private val creatorDBEntityDataMapper: CreatorDBEntityDataMapper
 ) {
 
-    suspend fun getComicListFromApi(position: Int, itemsPerPage: Int): List<ComicEntity> =
-        comicRemoteEntityDataMapper.transformRemoteEntityList(
+    suspend fun getComicListFromApi(position: Int, itemsPerPage: Int): List<ComicEntity> {
+        val comics = comicRemoteEntityDataMapper.transformRemoteEntityList(
             apiManager.getComics(
                 position, itemsPerPage
             )
         )
+        return setFavoriteComics(comics)
+    }
+
 
     suspend fun getComicListByTitleFromApi(
         query: String,
         position: Int,
         itemsPerPage: Int
-    ): List<ComicEntity> =
-        comicRemoteEntityDataMapper.transformRemoteEntityList(
+    ): List<ComicEntity> {
+        val comics = comicRemoteEntityDataMapper.transformRemoteEntityList(
             apiManager.getComicsByTitle(
                 query, position, itemsPerPage
             )
         )
+        return setFavoriteComics(comics)
+    }
 
     suspend fun getComicByIdFromApi(comicId: Int): ComicEntity {
         val comicEntity = comicRemoteEntityDataMapper.transformRemoteToEntity(
             apiManager.getComicById(comicId)
         )
-
         return comicEntity.copy(
             characters = characterRemoteEntityDataMapper.transformRemoteEntityList(
                 apiManager.getCharactersByComicId(comicId)
             ),
             creators = creatorRemoteEntityDataMapper.transformRemoteEntityList(
                 apiManager.getCreatorsByComicId(comicId)
-            )
+            ),
+            favorite = setFavoriteComics(listOf(comicEntity))[0].favorite
         )
     }
 
@@ -82,7 +87,7 @@ class ComicBusinessHelper @Inject constructor(
             )
     }
 
-    suspend fun getComicsByTitleList(query: String): List<ComicEntity> =
+    suspend fun getComicListByTitleFromDB(query: String): List<ComicEntity> =
         comicDBEntityDataMapper.transformDBEntityList(dbManager.getComicsByTitleList(query))
 
     suspend fun removeComic(comicEntity: ComicEntity) {
@@ -94,6 +99,18 @@ class ComicBusinessHelper @Inject constructor(
                 .map { it.copy(comicId = comicEntity.id) })
         dbManager.removeUrlList(comicEntity.urls.map { UrlDBEntity(0, comicEntity.id, it) })
         dbManager.removeComic(comicDBEntityDataMapper.transformEntityToDB(comicEntity))
+    }
+
+    private suspend fun setFavoriteComics(comicEntityList: List<ComicEntity>): List<ComicEntity> {
+        val comicList = mutableListOf<ComicEntity>()
+        comicEntityList.forEach {
+            if (getComicByIdFromDB(it.id) != null) {
+                comicList.add(it.copy(favorite = true))
+            } else {
+                comicList.add(it)
+            }
+        }
+        return comicList
     }
 
 }

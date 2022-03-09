@@ -5,8 +5,8 @@ import com.marchenaya.data.component.trace.TraceId
 import com.marchenaya.data.entity.local.ComicEntity
 import com.marchenaya.data.entity.remote.ComicRemoteEntity
 import com.marchenaya.data.entity.remote.UrlRemoteEntity
-import com.marchenaya.data.extension.IMAGE_VARIANT
-import com.marchenaya.data.extension.convertToImageRemoteEntity
+import com.marchenaya.data.extensions.IMAGE_VARIANT
+import com.marchenaya.data.extensions.convertToImageRemoteEntity
 import com.marchenaya.data.mapper.base.RemoteMapper
 import javax.inject.Inject
 

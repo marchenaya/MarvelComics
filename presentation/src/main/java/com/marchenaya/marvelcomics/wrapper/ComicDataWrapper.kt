@@ -20,4 +20,6 @@ class ComicDataWrapper(private val comic: Comic) {
 
     fun getCreators() = comic.creators.map { CreatorDataWrapper(it) }
 
+    fun getFavorite() = comic.favorite
+
 }

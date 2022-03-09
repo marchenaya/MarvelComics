@@ -11,16 +11,18 @@ class ComicListFragmentViewModel @Inject constructor(private val comicRepository
     ViewModel() {
 
     private var currentQueryValue: String? = null
+    private var currentFilterValue: Boolean? = null
     private var comicFlow: Flow<PagingData<Comic>>? = null
 
-    fun getComics(query: String): Flow<PagingData<Comic>> {
+    fun getComics(query: String, filterByFavorite: Boolean): Flow<PagingData<Comic>> {
         val lastResult = comicFlow
-        if (query == currentQueryValue && lastResult != null) {
+        if (query == currentQueryValue && filterByFavorite == currentFilterValue && lastResult != null) {
             return lastResult
         }
         currentQueryValue = query
+        currentFilterValue = filterByFavorite
         val newResult: Flow<PagingData<Comic>> =
-            comicRepository.getComicList(query)
+            comicRepository.getComicList(query, filterByFavorite)
         comicFlow = newResult
         return newResult
     }

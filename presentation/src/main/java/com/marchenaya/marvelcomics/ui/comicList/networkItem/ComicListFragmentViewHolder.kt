@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.databinding.ComicListItemBinding
 import com.marchenaya.marvelcomics.extensions.hide
+import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 
 const val IMAGE_WIDTH = 300
@@ -38,6 +39,11 @@ class ComicListFragmentViewHolder(private val binding: ComicListItemBinding) :
                 .override(IMAGE_WIDTH, IMAGE_HEIGHT)
                 .into(comicListItemImage)
             comicListItemTitle.text = comicDataWrapper.getTitle()
+            if (comicDataWrapper.getFavorite()) {
+                comicListItemFavorite.show()
+            } else {
+                comicListItemFavorite.hide()
+            }
         }
         itemView.setOnClickListener { onItemClickListener(comicDataWrapper) }
     }

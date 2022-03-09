@@ -4,6 +4,8 @@ import com.marchenaya.marvelcomics.component.navigation.NavigationComponent
 import com.marchenaya.marvelcomics.component.navigation.NavigationComponentImpl
 import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.component.network.NetworkManagerImpl
+import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
+import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponentImpl
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -20,5 +22,10 @@ object ApplicationModule {
     @Reusable
     fun networkManager(networkManager: NetworkManagerImpl): NetworkManager =
         networkManager
+
+    @Provides
+    @Reusable
+    fun snackbarComponent(snackbarComponent: SnackbarComponentImpl): SnackbarComponent =
+        snackbarComponent
 
 }

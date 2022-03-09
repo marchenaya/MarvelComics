@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.marchenaya.data.extension.observeSafe
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
+import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
 import com.marchenaya.marvelcomics.databinding.FragmentComicDetailBinding
 import com.marchenaya.marvelcomics.extensions.hide
+import com.marchenaya.marvelcomics.extensions.observeSafe
 import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.ui.comicDetail.person_item.PersonListFragmentAdapter
 import com.marchenaya.marvelcomics.ui.comicDetail.url_item.UrlListFragmentAdapter
@@ -27,7 +28,6 @@ class ComicDetailFragment :
     BaseVMFragment<ComicDetailFragmentViewModel, FragmentComicDetailBinding>() {
 
     private lateinit var comicDetailFragmentArgs: ComicDetailFragmentArgs
-
     private lateinit var menuItem: MenuItem
 
     @Inject
@@ -38,6 +38,9 @@ class ComicDetailFragment :
 
     @Inject
     lateinit var creatorsListFragmentAdapter: PersonListFragmentAdapter
+
+    @Inject
+    lateinit var snackbarComponent: SnackbarComponent
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicDetailBinding =
         FragmentComicDetailBinding::inflate
@@ -59,26 +62,18 @@ class ComicDetailFragment :
         super.onViewCreated(view, savedInstanceState)
         startOfLoading()
         setupRecyclerViews()
-        retrieveComicDetail()
+        viewModel.retrieveComicDetail(comicDetailFragmentArgs.comicId)
+        observeEvents()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-
         menuItem = menu.findItem(R.id.activity_main_menu_favorite)
-
-        viewModel.isCurrentComicFavorite().observeSafe(viewLifecycleOwner) {
-            if (it) {
-                menuItem.setIcon(R.drawable.ic_favorite)
-            } else {
-                menuItem.setIcon(R.drawable.ic_not_favorite)
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.activity_main_menu_favorite -> {
-            if (viewModel.changeFavorite()) {
+            if (viewModel.setFavorite()) {
                 item.setIcon(R.drawable.ic_favorite)
             } else {
                 item.setIcon(R.drawable.ic_not_favorite)
@@ -124,11 +119,19 @@ class ComicDetailFragment :
         }
     }
 
-    private fun retrieveComicDetail() {
-        viewModel.retrieveComicDetail(comicDetailFragmentArgs.comicId)
+    private fun observeEvents() {
         viewModel.getComicLiveData().observeSafe(viewLifecycleOwner) {
             fillDetail(it)
             endOfLoading()
+        }
+        viewModel.getSavedComicLiveEvent().observeSafe(viewLifecycleOwner) {
+            displaySuccessSnackbar(getString(R.string.added_comic, it))
+        }
+        viewModel.getRemovedComicLiveEvent().observeSafe(viewLifecycleOwner) {
+            displaySuccessSnackbar(getString(R.string.removed_comic, it))
+        }
+        viewModel.getErrorLiveEvent().observeSafe(viewLifecycleOwner) {
+            displayErrorSnackbar(it)
         }
     }
 
@@ -165,6 +168,11 @@ class ComicDetailFragment :
                 comicDetailCreatorsText.show()
                 creatorsListFragmentAdapter.setItems(comicDataWrapper.getCreators())
             }
+            if (comicDataWrapper.getFavorite()) {
+                menuItem.setIcon(R.drawable.ic_favorite)
+            } else {
+                menuItem.setIcon(R.drawable.ic_not_favorite)
+            }
         }
     }
 
@@ -175,6 +183,14 @@ class ComicDetailFragment :
             comicDetailProgressBar.hide()
             menuItem.show()
         }
+    }
+
+    private fun displaySuccessSnackbar(text: String) {
+        snackbarComponent.displaySuccess(requireContext(), text, view)
+    }
+
+    private fun displayErrorSnackbar(exception: Exception) {
+        snackbarComponent.displayError(requireContext(), exception, view)
     }
 
 }

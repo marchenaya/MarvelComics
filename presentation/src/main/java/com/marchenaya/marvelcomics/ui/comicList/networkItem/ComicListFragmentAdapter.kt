@@ -27,5 +27,4 @@ class ComicListFragmentAdapter @Inject constructor() :
         }
     }
 
-
 }

@@ -16,6 +16,7 @@ import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
 import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.hide
+import com.marchenaya.marvelcomics.extensions.observeSafe
 import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.ui.comicList.loadItem.ComicLoadStateAdapter
 import com.marchenaya.marvelcomics.ui.comicList.networkItem.ComicListFragmentAdapter
@@ -39,6 +40,7 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     lateinit var networkManager: NetworkManager
 
     private var query = ""
+    private var checkedChip = false
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicListBinding =
         FragmentComicListBinding::inflate
@@ -47,10 +49,10 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private var searchJob: Job? = null
 
-    private fun getComics(query: String = "") {
+    private fun getComics(query: String = "", filterByFavorite: Boolean = false) {
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
-            viewModel.getComics(query).collect {
+            viewModel.getComics(query, filterByFavorite).collect {
                 comicListFragmentAdapter.submitData(it)
             }
         }
@@ -74,7 +76,7 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let {
                     query = it
-                    getComics(it)
+                    getComics(it, checkedChip)
                 }
                 return false
             }
@@ -83,19 +85,20 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initAdapter()
-        getComics()
+        if (!networkManager.checkInternetConnectivity()) {
+            getComics()
+        }
         initGetComics()
 
-
-        networkManager.getConnectivityManager(requireContext(), {
+        networkManager.getConnectivityManager().observeSafe(viewLifecycleOwner) {
             getComics()
-        }, {
-            getComics()
-        })
+        }
+        binding.comicChip.setOnCheckedChangeListener { _, checked ->
+            checkedChip = checked
+            getComics(query, checkedChip)
+        }
 
-        //binding.comicRetryButton.setOnClickListener { comicListFragmentAdapter.retry() }
     }
 
     private fun initAdapter() {
@@ -117,9 +120,8 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
                 showEmptyList(isListEmpty, currentBinding)
 
                 comicRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-
-//                comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                //comicRetryButton.isVisible = loadState.source.refresh is LoadState.Error
+                comicChip.isVisible = loadState.source.refresh is LoadState.NotLoading
+                comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
@@ -137,11 +139,12 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     }
 
     private fun initGetComics() {
+        val currentBinding = binding
         lifecycleScope.launch {
             comicListFragmentAdapter.loadStateFlow
                 .distinctUntilChangedBy { it.refresh }
                 .filter { it.refresh is LoadState.NotLoading }
-                .collect { binding.comicRecyclerView.scrollToPosition(0) }
+                .collect { currentBinding.comicRecyclerView.scrollToPosition(0) }
         }
     }
 
@@ -150,9 +153,11 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
             if (show) {
                 comicEmptyList.show()
                 comicRecyclerView.hide()
+                comicChip.hide()
             } else {
                 comicEmptyList.hide()
                 comicRecyclerView.show()
+                comicChip.show()
             }
         }
     }

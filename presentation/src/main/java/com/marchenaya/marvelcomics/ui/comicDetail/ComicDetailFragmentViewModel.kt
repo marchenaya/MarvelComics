@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.marchenaya.data.model.Comic
 import com.marchenaya.data.repository.ComicRepository
+import com.marchenaya.marvelcomics.base.SingleLiveEvent
 import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 import javax.inject.Inject
@@ -15,37 +16,35 @@ import timber.log.Timber
 class ComicDetailFragmentViewModel @Inject constructor(
     private val comicRepository: ComicRepository,
     private val networkManager: NetworkManager
-) :
-    ViewModel() {
-
-    private val comicLiveData = MutableLiveData<ComicDataWrapper>()
+) : ViewModel() {
 
     private lateinit var currentComic: Comic
-    private val isCurrentComicFavorite = MutableLiveData<Boolean>()
+
+    private val comicLiveData = MutableLiveData<ComicDataWrapper>()
+    private val savedComicLiveEvent = SingleLiveEvent<String>()
+    private val removedComicLiveEvent = SingleLiveEvent<String>()
+    private val errorLiveEvent = SingleLiveEvent<Exception>()
 
     fun getComicLiveData(): LiveData<ComicDataWrapper> = comicLiveData
-    fun isCurrentComicFavorite(): LiveData<Boolean> = isCurrentComicFavorite
+    fun getSavedComicLiveEvent(): LiveData<String> = savedComicLiveEvent
+    fun getRemovedComicLiveEvent(): LiveData<String> = removedComicLiveEvent
+    fun getErrorLiveEvent(): LiveData<Exception> = errorLiveEvent
 
     fun retrieveComicDetail(id: Int) {
-
         viewModelScope.launch {
             try {
                 val comicDB = comicRepository.getComicByIdFromDB(id)
                 var comic: Comic? = null
 
                 if (networkManager.checkInternetConnectivity()) {
-                    if (comicDB?.favorite == true) {
-                        comic = comicRepository.getComicByIdFromApi(id).copy(favorite = true)
+                    if (comic != null && comicDB?.favorite == true) {
                         comicRepository.saveComic(comic)
-                        isCurrentComicFavorite.postValue(true)
                     } else {
                         comic = comicRepository.getComicByIdFromApi(id)
-                        isCurrentComicFavorite.postValue(false)
                     }
                 } else {
                     if (comicDB != null) {
                         comic = comicDB
-                        isCurrentComicFavorite.postValue(true)
                     }
                 }
                 if (comic != null) {
@@ -54,23 +53,36 @@ class ComicDetailFragmentViewModel @Inject constructor(
                 comicLiveData.postValue(comic?.let { ComicDataWrapper(it) })
             } catch (e: Exception) {
                 Timber.e(e)
+                errorLiveEvent.postValue(e)
             }
         }
     }
 
-    fun changeFavorite(): Boolean {
+    fun setFavorite(): Boolean {
         return if (currentComic.favorite) {
             viewModelScope.launch {
-                currentComic = currentComic.copy(favorite = false)
-                isCurrentComicFavorite.postValue(false)
-                comicRepository.removeComic(currentComic)
+                try {
+                    currentComic = currentComic.copy(favorite = false)
+                    comicRepository.removeComic(currentComic)
+                    Timber.i("Removed comic : ${currentComic.title}")
+                    removedComicLiveEvent.postValue(currentComic.title)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    errorLiveEvent.postValue(e)
+                }
             }
             false
         } else {
             viewModelScope.launch {
-                currentComic = currentComic.copy(favorite = true)
-                isCurrentComicFavorite.postValue(true)
-                comicRepository.saveComic(currentComic)
+                try {
+                    currentComic = currentComic.copy(favorite = true)
+                    comicRepository.saveComic(currentComic)
+                    Timber.i("Saved comic : ${currentComic.title}")
+                    savedComicLiveEvent.postValue(currentComic.title)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    errorLiveEvent.postValue(e)
+                }
             }
             true
         }

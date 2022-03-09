@@ -8,10 +8,16 @@
     <string name="comic_detail_title_text">Title :</string>
     <string name="comic_detail_description_text">Description :</string>
     <string name="comic_detail_page_count_text">Number of pages :</string>
-    <string name="comic_detail_urls_text">"Links :"</string>
+    <string name="comic_detail_urls_text">Links :</string>
     <string name="person_list_item_image_description">Image of person</string>
     <string name="comic_detail_characters_text">Characters :</string>
     <string name="comic_detail_creators_text">Creators :</string>
     <string name="dot">●</string>
     <string name="favorite_menu_button">Favorite</string>
+    <string name="favorite_image">Favorite image</string>
+    <string name="error_general">An error has occurred. Please try again later.</string>
+    <string name="error_api">An internet error has occurred. Please try again later.</string>
+    <string name="added_comic">Comic \"%s\" added to favorites</string>
+    <string name="removed_comic">Comic \"%s\" removed from favorites</string>
+    <string name="comic_chip">Filter by favorites</string>
 </resources>

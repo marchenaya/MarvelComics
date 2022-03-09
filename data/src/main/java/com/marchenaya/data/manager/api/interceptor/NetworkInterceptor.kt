@@ -2,11 +2,8 @@ package com.marchenaya.data.manager.api.interceptor
 
 import com.marchenaya.data.exception.InvalidParametersException
 import com.marchenaya.data.exception.NotFoundException
-import com.marchenaya.data.exception.OfflineException
 import com.marchenaya.data.exception.RequestFailException
 import dagger.Reusable
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -22,11 +19,7 @@ class NetworkInterceptor @Inject constructor() : Interceptor {
             checkResponse(response)
             return response
         } catch (exception: Exception) {
-            when (exception) {
-                is SocketTimeoutException,
-                is TimeoutException -> throw OfflineException()
-                else -> throw exception
-            }
+            throw exception
         }
     }
 

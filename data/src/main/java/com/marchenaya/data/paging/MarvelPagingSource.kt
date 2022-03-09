@@ -14,6 +14,7 @@ private const val MARVEL_STARTING_PAGE_INDEX = 0
 
 class MarvelPagingSource(
     private val query: String,
+    private val filterByFavorite: Boolean,
     private val comicBusinessHelper: ComicBusinessHelper,
     private val comicEntityDataMapper: ComicEntityDataMapper,
     private val networkManager: NetworkManager
@@ -22,7 +23,7 @@ class MarvelPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comic> {
         val position = params.key ?: MARVEL_STARTING_PAGE_INDEX
         return try {
-            if (networkManager.checkInternetConnectivity()) {
+            if (networkManager.checkInternetConnectivity() && !filterByFavorite) {
                 val response = if (query.isEmpty()) {
                     comicBusinessHelper.getComicListFromApi(position, params.loadSize)
                 } else {
@@ -42,7 +43,7 @@ class MarvelPagingSource(
                 )
             } else {
                 val dbQuery = "%${query.replace(' ', '%')}%"
-                val response = comicBusinessHelper.getComicsByTitleList(dbQuery)
+                val response = comicBusinessHelper.getComicListByTitleFromDB(dbQuery)
 
                 LoadResult.Page(
                     data = comicEntityDataMapper.transformEntityList(response),
