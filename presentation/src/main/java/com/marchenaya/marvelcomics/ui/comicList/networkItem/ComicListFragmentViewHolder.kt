@@ -3,13 +3,12 @@ package com.marchenaya.marvelcomics.ui.comicList.networkItem
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.marchenaya.marvelcomics.R
+import com.marchenaya.marvelcomics.consts.IMAGE_HEIGHT
+import com.marchenaya.marvelcomics.consts.IMAGE_WIDTH
 import com.marchenaya.marvelcomics.databinding.ComicListItemBinding
 import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
-
-const val IMAGE_WIDTH = 300
-const val IMAGE_HEIGHT = 450
 
 class ComicListFragmentViewHolder(private val binding: ComicListItemBinding) :
     RecyclerView.ViewHolder(binding.root) {

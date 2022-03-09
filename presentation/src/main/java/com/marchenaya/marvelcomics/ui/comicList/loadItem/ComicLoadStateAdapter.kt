@@ -9,10 +9,6 @@ import com.marchenaya.marvelcomics.databinding.ComicLoadStateItemBinding
 class ComicLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<ComicLoadStateViewHolder>() {
 
-    override fun onBindViewHolder(holder: ComicLoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState
@@ -21,4 +17,9 @@ class ComicLoadStateAdapter(private val retry: () -> Unit) :
             LayoutInflater.from(parent.context), parent, false
         ), retry
     )
+
+    override fun onBindViewHolder(holder: ComicLoadStateViewHolder, loadState: LoadState) {
+        holder.bind(loadState)
+    }
+
 }

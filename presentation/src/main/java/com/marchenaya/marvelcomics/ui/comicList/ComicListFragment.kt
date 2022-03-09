@@ -5,19 +5,18 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
 import com.marchenaya.marvelcomics.component.network.NetworkManager
+import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
-import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.observeSafe
-import com.marchenaya.marvelcomics.extensions.show
 import com.marchenaya.marvelcomics.ui.comicList.loadItem.ComicLoadStateAdapter
 import com.marchenaya.marvelcomics.ui.comicList.networkItem.ComicListFragmentAdapter
 import javax.inject.Inject
@@ -30,6 +29,9 @@ import kotlinx.coroutines.launch
 
 class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentComicListBinding>() {
 
+    private var query = ""
+    private var checkedChip = false
+
     @Inject
     lateinit var navigatorListener: ComicListFragmentNavigatorListener
 
@@ -39,8 +41,8 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     @Inject
     lateinit var networkManager: NetworkManager
 
-    private var query = ""
-    private var checkedChip = false
+    @Inject
+    lateinit var snackbarComponent: SnackbarComponent
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentComicListBinding =
         FragmentComicListBinding::inflate
@@ -49,15 +51,6 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     private var searchJob: Job? = null
 
-    private fun getComics(query: String = "", filterByFavorite: Boolean = false) {
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.getComics(query, filterByFavorite).collect {
-                comicListFragmentAdapter.submitData(it)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -65,12 +58,12 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-
         val menuItem = menu.findItem(R.id.activity_main_menu_search)
-        val searchView = menuItem.actionView as SearchView
+        setSearchView(menuItem.actionView as SearchView)
+    }
 
+    private fun setSearchView(searchView: SearchView) {
         searchView.queryHint = getString(R.string.search_menu_button)
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -86,11 +79,62 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
+        initGetComics()
+        observeEvents()
+        setupRecyclerViewScroll()
+    }
+
+    private fun initAdapter() {
+        val currentBinding = binding
+        with(currentBinding) {
+            comicRecyclerView.apply {
+                adapter =
+                    comicListFragmentAdapter.withLoadStateHeaderAndFooter(
+                        header = ComicLoadStateAdapter(comicListFragmentAdapter::retry),
+                        footer = ComicLoadStateAdapter(comicListFragmentAdapter::retry)
+                    )
+                layoutManager = GridLayoutManager(requireContext(), 2)
+            }
+            comicListFragmentAdapter.apply {
+                onItemClickListener = {
+                    navigatorListener.displayFoodDetailFragment(it.getId(), it.getTitle())
+                }
+                addLoadStateListener { loadStates ->
+                    onLoadStateListener(loadStates, currentBinding)
+                }
+            }
+        }
+    }
+
+    private fun onLoadStateListener(
+        loadStates: CombinedLoadStates,
+        currentBinding: FragmentComicListBinding
+    ) {
+        with(currentBinding) {
+            val isListEmpty =
+                loadStates.refresh is LoadState.NotLoading && comicListFragmentAdapter.itemCount == 0
+            comicEmptyList.isVisible = isListEmpty
+            comicRecyclerView.isVisible = !isListEmpty
+            comicChip.isVisible = !isListEmpty
+            comicProgressBar.isVisible = loadStates.source.refresh is LoadState.Loading
+        }
+
+        val errorState = loadStates.source.append as? LoadState.Error
+            ?: loadStates.source.prepend as? LoadState.Error
+            ?: loadStates.append as? LoadState.Error
+            ?: loadStates.prepend as? LoadState.Error
+        errorState?.let {
+            snackbarComponent.displayError(requireContext(), it.error, view)
+        }
+    }
+
+    private fun initGetComics() {
         if (!networkManager.checkInternetConnectivity()) {
             getComics()
         }
-        initGetComics()
+    }
 
+    private fun observeEvents() {
         networkManager.getConnectivityManager().observeSafe(viewLifecycleOwner) {
             getComics()
         }
@@ -98,47 +142,10 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
             checkedChip = checked
             getComics(query, checkedChip)
         }
-
+        getComics()
     }
 
-    private fun initAdapter() {
-        val currentBinding = binding
-        with(currentBinding) {
-            comicRecyclerView.adapter =
-                comicListFragmentAdapter.withLoadStateHeaderAndFooter(header = ComicLoadStateAdapter { comicListFragmentAdapter.retry() },
-                    footer = ComicLoadStateAdapter { comicListFragmentAdapter.retry() })
-
-            comicRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-
-            comicListFragmentAdapter.onItemClickListener = {
-                navigatorListener.displayFoodDetailFragment(it.getId(), it.getTitle())
-            }
-
-            comicListFragmentAdapter.addLoadStateListener { loadState ->
-                val isListEmpty =
-                    loadState.refresh is LoadState.NotLoading && comicListFragmentAdapter.itemCount == 0
-                showEmptyList(isListEmpty, currentBinding)
-
-                comicRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-                comicChip.isVisible = loadState.source.refresh is LoadState.NotLoading
-                comicProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-
-                val errorState = loadState.source.append as? LoadState.Error
-                    ?: loadState.source.prepend as? LoadState.Error
-                    ?: loadState.append as? LoadState.Error
-                    ?: loadState.prepend as? LoadState.Error
-                errorState?.let {
-                    Toast.makeText(
-                        requireContext(),
-                        "There is an error : ${it.error}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
-    private fun initGetComics() {
+    private fun setupRecyclerViewScroll() {
         val currentBinding = binding
         lifecycleScope.launch {
             comicListFragmentAdapter.loadStateFlow
@@ -148,16 +155,11 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
         }
     }
 
-    private fun showEmptyList(show: Boolean, binding: FragmentComicListBinding) {
-        with(binding) {
-            if (show) {
-                comicEmptyList.show()
-                comicRecyclerView.hide()
-                comicChip.hide()
-            } else {
-                comicEmptyList.hide()
-                comicRecyclerView.show()
-                comicChip.show()
+    private fun getComics(query: String = "", filterByFavorite: Boolean = false) {
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            viewModel.getComics(query, filterByFavorite).collect {
+                comicListFragmentAdapter.submitData(it)
             }
         }
     }

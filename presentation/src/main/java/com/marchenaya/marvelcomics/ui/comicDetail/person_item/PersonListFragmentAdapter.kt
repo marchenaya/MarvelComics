@@ -27,13 +27,13 @@ class PersonListFragmentAdapter @Inject constructor() :
         holder.bind(items[position])
     }
 
+    override fun getItemCount(): Int = items.size
+
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(newItems: List<PersonDataWrapper>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
     }
-
-    override fun getItemCount(): Int = items.size
 
 }

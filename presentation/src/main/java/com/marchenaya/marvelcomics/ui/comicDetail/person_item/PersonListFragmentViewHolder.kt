@@ -3,11 +3,11 @@ package com.marchenaya.marvelcomics.ui.comicDetail.person_item
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.marchenaya.marvelcomics.R
+import com.marchenaya.marvelcomics.consts.IMAGE_HEIGHT
+import com.marchenaya.marvelcomics.consts.IMAGE_WIDTH
 import com.marchenaya.marvelcomics.databinding.PersonListItemBinding
 import com.marchenaya.marvelcomics.wrapper.PersonDataWrapper
 
-const val IMAGE_WIDTH = 300
-const val IMAGE_HEIGHT = 450
 
 class PersonListFragmentViewHolder(private val binding: PersonListItemBinding) :
     RecyclerView.ViewHolder(binding.root) {

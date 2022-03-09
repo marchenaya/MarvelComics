@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
 import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
+import com.marchenaya.marvelcomics.consts.IMAGE_HEIGHT
+import com.marchenaya.marvelcomics.consts.IMAGE_WIDTH
 import com.marchenaya.marvelcomics.databinding.FragmentComicDetailBinding
 import com.marchenaya.marvelcomics.extensions.hide
 import com.marchenaya.marvelcomics.extensions.observeSafe
@@ -20,9 +22,6 @@ import com.marchenaya.marvelcomics.ui.comicDetail.person_item.PersonListFragment
 import com.marchenaya.marvelcomics.ui.comicDetail.url_item.UrlListFragmentAdapter
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 import javax.inject.Inject
-
-const val IMAGE_WIDTH = 300
-const val IMAGE_HEIGHT = 450
 
 class ComicDetailFragment :
     BaseVMFragment<ComicDetailFragmentViewModel, FragmentComicDetailBinding>() {
@@ -53,11 +52,6 @@ class ComicDetailFragment :
         getComicDetailFragmentArgs()
     }
 
-    private fun getComicDetailFragmentArgs() {
-        val args: ComicDetailFragmentArgs by navArgs()
-        comicDetailFragmentArgs = args
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startOfLoading()
@@ -81,6 +75,11 @@ class ComicDetailFragment :
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun getComicDetailFragmentArgs() {
+        val args: ComicDetailFragmentArgs by navArgs()
+        comicDetailFragmentArgs = args
     }
 
     private fun startOfLoading() {
@@ -135,6 +134,14 @@ class ComicDetailFragment :
         }
     }
 
+    private fun displaySuccessSnackbar(text: String) {
+        snackbarComponent.displaySuccess(requireContext(), text, view)
+    }
+
+    private fun displayErrorSnackbar(exception: Exception) {
+        snackbarComponent.displayError(requireContext(), exception, view)
+    }
+
     private fun fillDetail(comicDataWrapper: ComicDataWrapper) {
         binding {
             Glide.with(requireContext())
@@ -183,14 +190,6 @@ class ComicDetailFragment :
             comicDetailProgressBar.hide()
             menuItem.show()
         }
-    }
-
-    private fun displaySuccessSnackbar(text: String) {
-        snackbarComponent.displaySuccess(requireContext(), text, view)
-    }
-
-    private fun displayErrorSnackbar(exception: Exception) {
-        snackbarComponent.displayError(requireContext(), exception, view)
     }
 
 }
