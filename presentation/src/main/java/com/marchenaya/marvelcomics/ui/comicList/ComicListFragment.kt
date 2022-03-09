@@ -17,8 +17,8 @@ import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.observeSafe
+import com.marchenaya.marvelcomics.ui.comicList.comicItem.ComicListFragmentAdapter
 import com.marchenaya.marvelcomics.ui.comicList.loadItem.ComicLoadStateAdapter
-import com.marchenaya.marvelcomics.ui.comicList.networkItem.ComicListFragmentAdapter
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -115,8 +115,10 @@ class ComicListFragment : BaseVMFragment<ComicListFragmentViewModel, FragmentCom
                 loadStates.refresh is LoadState.NotLoading && comicListFragmentAdapter.itemCount == 0
             comicEmptyList.isVisible = isListEmpty
             comicRecyclerView.isVisible = !isListEmpty
-            comicChip.isVisible = !isListEmpty
-            comicProgressBar.isVisible = loadStates.source.refresh is LoadState.Loading
+            comicChip.isVisible =
+                loadStates.source.refresh is LoadState.NotLoading || comicListFragmentAdapter.itemCount > 0
+            val isLoading = loadStates.source.refresh is LoadState.Loading
+            comicProgressBar.isVisible = isLoading
         }
 
         val errorState = loadStates.source.append as? LoadState.Error

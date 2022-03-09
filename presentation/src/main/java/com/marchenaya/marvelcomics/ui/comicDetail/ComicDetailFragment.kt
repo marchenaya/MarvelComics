@@ -68,7 +68,7 @@ class ComicDetailFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.activity_main_menu_favorite -> {
             if (viewModel.setFavorite()) {
-                item.setIcon(R.drawable.ic_favorite)
+                item.setIcon(R.drawable.ic_favorite_white)
             } else {
                 item.setIcon(R.drawable.ic_not_favorite)
             }
@@ -176,7 +176,7 @@ class ComicDetailFragment :
                 creatorsListFragmentAdapter.setItems(comicDataWrapper.getCreators())
             }
             if (comicDataWrapper.getFavorite()) {
-                menuItem.setIcon(R.drawable.ic_favorite)
+                menuItem.setIcon(R.drawable.ic_favorite_white)
             } else {
                 menuItem.setIcon(R.drawable.ic_not_favorite)
             }

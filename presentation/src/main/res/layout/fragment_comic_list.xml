@@ -4,6 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/comic_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="comic_recycler_view,
+                                       comic_empty_list" />
+
     <com.google.android.material.chip.Chip
         android:id="@+id/comic_chip"
         style="@style/Widget.MaterialComponents.Chip.Choice"
@@ -15,7 +23,7 @@
         android:visibility="gone"
         app:checkedIcon="@drawable/ic_favorite"
         app:checkedIconEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/comic_recycler_view"
+        app:layout_constraintBottom_toTopOf="@id/comic_barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +50,7 @@
     <TextView
         android:id="@+id/comic_empty_list"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/no_results"
         android:textSize="@dimen/comic_empty_list_text_size"
@@ -50,6 +58,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/comic_chip" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
