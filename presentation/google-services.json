@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "516596242497",
+    "project_id": "marvel-comics-31191",
+    "storage_bucket": "marvel-comics-31191.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516596242497:android:87248498488e4693c74ec0",
+        "android_client_info": {
+          "package_name": "com.marchenaya.marvelcomics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "516596242497-b8lla1irc6qkgg3of4pjfe3q4nh7qta1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU8Sabp_2WFG8KhVOAugQVPWo3vVU4XVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "516596242497-b8lla1irc6qkgg3of4pjfe3q4nh7qta1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
