@@ -3,4 +3,5 @@
     <attr name="snackbarSuccessBackground" format="color" />
     <attr name="snackbarErrorBackground" format="color" />
     <attr name="snackbarWarningBackground" format="color" />
+    <attr name="colorDefaultImage" format="color" />
 </resources>

@@ -1,7 +1,7 @@
 package com.marchenaya.marvelcomics.ui.comicList.comicItem
 
 import androidx.recyclerview.widget.DiffUtil
-import com.marchenaya.data.model.Comic
+import com.marchenaya.domain.model.Comic
 
 class ComicItemDiffCallback : DiffUtil.ItemCallback<Comic>() {
     override fun areItemsTheSame(oldItem: Comic, newItem: Comic): Boolean =

@@ -12,7 +12,6 @@ enum class TraceId {
 
     DB_MAPPER_COMIC,
     DB_MAPPER_CHARACTER,
-    DB_MAPPER_CREATOR,
-    DB_MAPPER_URL
+    DB_MAPPER_CREATOR
 
 }

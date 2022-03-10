@@ -4,18 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.marchenaya.data.model.Comic
-import com.marchenaya.data.repository.ComicRepository
+import com.marchenaya.domain.model.Comic
+import com.marchenaya.domain.useCase.comic.RemoveComic
+import com.marchenaya.domain.useCase.comic.RetrieveComicById
+import com.marchenaya.domain.useCase.comic.SaveComic
 import com.marchenaya.marvelcomics.base.SingleLiveEvent
-import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ComicDetailFragmentViewModel @Inject constructor(
-    private val comicRepository: ComicRepository,
-    private val networkManager: NetworkManager
+    private val retrieveComicById: RetrieveComicById,
+    private val saveComic: SaveComic,
+    private val removeComic: RemoveComic
 ) : ViewModel() {
 
     private lateinit var currentComic: Comic
@@ -33,24 +35,9 @@ class ComicDetailFragmentViewModel @Inject constructor(
     fun retrieveComicDetail(id: Int) {
         viewModelScope.launch {
             try {
-                val comicDB = comicRepository.getComicByIdFromDB(id)
-                var comic: Comic? = null
-
-                if (networkManager.checkInternetConnectivity()) {
-                    if (comic != null && comicDB?.favorite == true) {
-                        comicRepository.saveComic(comic)
-                    } else {
-                        comic = comicRepository.getComicByIdFromApi(id)
-                    }
-                } else {
-                    if (comicDB != null) {
-                        comic = comicDB
-                    }
-                }
-                if (comic != null) {
-                    currentComic = comic
-                }
-                comicLiveData.postValue(comic?.let { ComicDataWrapper(it) })
+                currentComic =
+                    retrieveComicById.launchUseCase(params = RetrieveComicById.Params(id))
+                comicLiveData.postValue(ComicDataWrapper(currentComic))
             } catch (e: Exception) {
                 Timber.e(e)
                 errorLiveEvent.postValue(e)
@@ -63,7 +50,7 @@ class ComicDetailFragmentViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     currentComic = currentComic.copy(favorite = false)
-                    comicRepository.removeComic(currentComic)
+                    removeComic.launchUseCase(RemoveComic.Params(comic = currentComic))
                     Timber.i("Removed comic : ${currentComic.title}")
                     removedComicLiveEvent.postValue(currentComic.title)
                 } catch (e: Exception) {
@@ -76,7 +63,7 @@ class ComicDetailFragmentViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     currentComic = currentComic.copy(favorite = true)
-                    comicRepository.saveComic(currentComic)
+                    saveComic.launchUseCase(SaveComic.Params(comic = currentComic))
                     Timber.i("Saved comic : ${currentComic.title}")
                     savedComicLiveEvent.postValue(currentComic.title)
                 } catch (e: Exception) {

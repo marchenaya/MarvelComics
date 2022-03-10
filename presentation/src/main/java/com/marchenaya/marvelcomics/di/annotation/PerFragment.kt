@@ -1,4 +1,4 @@
-package com.marchenaya.presentation.di.annotation
+package com.marchenaya.marvelcomics.di.annotation
 
 import javax.inject.Scope
 

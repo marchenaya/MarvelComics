@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply plugin: 'kotlin-kapt'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
+dependencies {
+
+    //Dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    //Paging
+    implementation "androidx.paging:paging-common-ktx:$pagingVersion"
+
+}

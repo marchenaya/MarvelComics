@@ -34,7 +34,6 @@ class ComicBusinessHelper @Inject constructor(
         return setFavoriteComics(comics)
     }
 
-
     suspend fun getComicListByTitleFromApi(
         query: String,
         position: Int,

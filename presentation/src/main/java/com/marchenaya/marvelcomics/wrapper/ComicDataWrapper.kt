@@ -1,6 +1,6 @@
 package com.marchenaya.marvelcomics.wrapper
 
-import com.marchenaya.data.model.Comic
+import com.marchenaya.domain.model.Comic
 
 class ComicDataWrapper(private val comic: Comic) {
 

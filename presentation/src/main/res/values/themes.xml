@@ -18,5 +18,6 @@
         <item name="snackbarSuccessBackground">@color/primary</item>
         <item name="snackbarWarningBackground">@color/orange</item>
         <item name="snackbarErrorBackground">@color/red</item>
+        <item name="colorDefaultImage">@color/black</item>
     </style>
 </resources>

@@ -1,4 +1,4 @@
-package com.marchenaya.data.model
+package com.marchenaya.domain.model
 
 data class Creator(
     val id: Int,

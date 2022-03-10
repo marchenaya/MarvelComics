@@ -11,9 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.marchenaya.data.manager.network.NetworkManager
 import com.marchenaya.marvelcomics.R
 import com.marchenaya.marvelcomics.base.fragment.BaseVMFragment
-import com.marchenaya.marvelcomics.component.network.NetworkManager
 import com.marchenaya.marvelcomics.component.snackbar.SnackbarComponent
 import com.marchenaya.marvelcomics.databinding.FragmentComicListBinding
 import com.marchenaya.marvelcomics.extensions.observeSafe

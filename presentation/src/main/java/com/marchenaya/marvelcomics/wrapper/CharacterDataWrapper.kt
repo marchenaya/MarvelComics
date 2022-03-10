@@ -1,6 +1,6 @@
 package com.marchenaya.marvelcomics.wrapper
 
-import com.marchenaya.data.model.Character
+import com.marchenaya.domain.model.Character
 
 
 class CharacterDataWrapper(private val character: Character) : PersonDataWrapper {

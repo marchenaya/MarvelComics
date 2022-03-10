@@ -4,7 +4,9 @@ import android.content.Context
 import com.marchenaya.data.di.module.DataModule
 import com.marchenaya.data.di.module.ManagerModule
 import com.marchenaya.data.di.module.NetworkModule
-import com.marchenaya.data.repository.ComicRepository
+import com.marchenaya.data.manager.network.NetworkManager
+import com.marchenaya.domain.executor.ThreadExecutor
+import com.marchenaya.domain.repository.ComicRepository
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -14,6 +16,10 @@ import javax.inject.Singleton
 interface DataComponent {
 
     fun comicRepository(): ComicRepository
+
+    fun networkManager(): NetworkManager
+
+    fun threadExecutor(): ThreadExecutor
 
     @Component.Factory
     interface Factory {

@@ -3,7 +3,7 @@ package com.marchenaya.marvelcomics.ui.comicList.comicItem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import com.marchenaya.data.model.Comic
+import com.marchenaya.domain.model.Comic
 import com.marchenaya.marvelcomics.databinding.ComicListItemBinding
 import com.marchenaya.marvelcomics.wrapper.ComicDataWrapper
 import javax.inject.Inject

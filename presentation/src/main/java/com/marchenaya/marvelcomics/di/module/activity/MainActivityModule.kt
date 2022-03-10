@@ -2,12 +2,12 @@ package com.marchenaya.marvelcomics.di.module.activity
 
 import androidx.navigation.findNavController
 import com.marchenaya.marvelcomics.di.annotation.PerActivity
+import com.marchenaya.marvelcomics.di.annotation.PerFragment
 import com.marchenaya.marvelcomics.ui.comicDetail.ComicDetailFragment
 import com.marchenaya.marvelcomics.ui.comicList.ComicListFragment
 import com.marchenaya.marvelcomics.ui.comicList.ComicListFragmentNavigatorListener
 import com.marchenaya.marvelcomics.ui.main.MainActivity
 import com.marchenaya.marvelcomics.ui.main.MainNavigator
-import com.marchenaya.presentation.di.annotation.PerFragment
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector

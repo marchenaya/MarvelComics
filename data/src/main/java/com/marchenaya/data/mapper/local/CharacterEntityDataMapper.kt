@@ -4,7 +4,7 @@ import com.marchenaya.data.component.trace.TraceComponent
 import com.marchenaya.data.component.trace.TraceId
 import com.marchenaya.data.entity.local.CharacterEntity
 import com.marchenaya.data.mapper.base.ModelMapper
-import com.marchenaya.data.model.Character
+import com.marchenaya.domain.model.Character
 import javax.inject.Inject
 
 class CharacterEntityDataMapper @Inject constructor(

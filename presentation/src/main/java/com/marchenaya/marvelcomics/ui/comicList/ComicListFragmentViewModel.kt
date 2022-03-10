@@ -2,13 +2,13 @@ package com.marchenaya.marvelcomics.ui.comicList
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
-import com.marchenaya.data.model.Comic
-import com.marchenaya.data.repository.ComicRepository
+import com.marchenaya.domain.model.Comic
+import com.marchenaya.domain.useCase.comic.RetrieveComics
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
-class ComicListFragmentViewModel @Inject constructor(private val comicRepository: ComicRepository) :
+class ComicListFragmentViewModel @Inject constructor(private val retrieveComics: RetrieveComics) :
     ViewModel() {
 
     private var currentQueryValue: String = ""
@@ -23,7 +23,7 @@ class ComicListFragmentViewModel @Inject constructor(private val comicRepository
         currentQueryValue = query
         currentFilterValue = filterByFavorite
         val newResult: Flow<PagingData<Comic>> =
-            comicRepository.getComicList(query, filterByFavorite)
+            retrieveComics.launchUseCase(RetrieveComics.Params(query, filterByFavorite))
         comicFlow = newResult
         return newResult
     }

@@ -4,7 +4,7 @@ import com.marchenaya.data.component.trace.TraceComponent
 import com.marchenaya.data.component.trace.TraceId
 import com.marchenaya.data.entity.local.CreatorEntity
 import com.marchenaya.data.mapper.base.ModelMapper
-import com.marchenaya.data.model.Creator
+import com.marchenaya.domain.model.Creator
 import javax.inject.Inject
 
 class CreatorEntityDataMapper @Inject constructor(

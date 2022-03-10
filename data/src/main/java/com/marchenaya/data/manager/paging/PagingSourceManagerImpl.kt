@@ -1,24 +1,28 @@
-package com.marchenaya.data.paging
+package com.marchenaya.data.manager.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.marchenaya.data.business.ComicBusinessHelper
 import com.marchenaya.data.manager.network.NetworkManager
 import com.marchenaya.data.mapper.local.ComicEntityDataMapper
-import com.marchenaya.data.model.Comic
+import com.marchenaya.domain.model.Comic
 import java.io.IOException
+import javax.inject.Inject
 import retrofit2.HttpException
 import timber.log.Timber
 
+
 private const val MARVEL_STARTING_PAGE_INDEX = 0
 
-class MarvelPagingSource(
-    private val query: String,
-    private val filterByFavorite: Boolean,
+class PagingSourceManagerImpl @Inject constructor(
+
     private val comicBusinessHelper: ComicBusinessHelper,
     private val comicEntityDataMapper: ComicEntityDataMapper,
     private val networkManager: NetworkManager
-) : PagingSource<Int, Comic>() {
+) : PagingSource<Int, Comic>(), PagingSourceManager {
+
+    private var query: String = ""
+    private var filterByFavorite: Boolean = false
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comic> {
         val position = params.key ?: MARVEL_STARTING_PAGE_INDEX
@@ -67,4 +71,12 @@ class MarvelPagingSource(
         }
     }
 
+    override fun getPagingSource(
+        query: String,
+        filterByFavorite: Boolean
+    ): PagingSource<Int, Comic> {
+        this.query = query
+        this.filterByFavorite = filterByFavorite
+        return this
+    }
 }
