@@ -22,7 +22,7 @@ task clean(type: Delete) {
 }
 
 ext {
-    javaVersion = JavaVersion.VERSION_16
+    javaVersion = JavaVersion.VERSION_15
     appcompatVersion = '1.4.1'
     coreKtxVersion = '1.7.0'
     espressoCoreVersion = '3.4.0'
